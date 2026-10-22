@@ -1,0 +1,15 @@
+{
+	"fixed": {
+		"file_version": "4.0.0"
+	},
+	"info": {
+		"0000": {
+			"ProductVersion": "4.0.0",
+			"CompanyName": "potato",
+			"FileDescription": "Twitch chat overlay for streamers",
+			"LegalCopyright": "(c) 2026, potato",
+			"ProductName": "Potato Chat",
+			"Comments": "This is a comment"
+		}
+	}
+}

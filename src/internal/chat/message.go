@@ -1,0 +1,58 @@
+package chat
+
+import "time"
+
+type Badge struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
+	URL     string `json:"url"`
+}
+
+type FragmentKind string
+
+const (
+	FragmentText  FragmentKind = "text"
+	FragmentEmote FragmentKind = "emote"
+	FragmentGif   FragmentKind = "gif"
+)
+
+type Entity struct {
+	ID    string       `json:"id"`
+	Start int          `json:"start"`
+	End   int          `json:"end"`
+	URL   string       `json:"url"`
+	Kind  FragmentKind `json:"kind"`
+}
+
+type MessageFragment struct {
+	Type FragmentKind `json:"type"`
+	Text string       `json:"text"`
+	URL  string       `json:"url"`
+}
+
+type SuperChatDetails struct {
+	Amount      string `json:"amount"`
+	HeaderColor string `json:"headerColor"`
+	BodyColor   string `json:"bodyColor"`
+}
+
+type ChatMessage struct {
+	ID        string            `json:"id"`
+	Platform  Platform          `json:"platform"`
+	Username  string            `json:"username"`
+	Color     string            `json:"color"`
+	Text      string            `json:"text"`
+	Badges    []Badge           `json:"badges"`
+	Fragments []MessageFragment `json:"fragments"`
+	Timestamp time.Time         `json:"timestamp"`
+	IsAction  bool              `json:"isAction"`
+	Tags      map[string]string `json:"tags"`
+
+	EventType     string            `json:"eventType"`
+	SystemMessage string            `json:"systemMessage"`
+	EventData     map[string]string `json:"eventData"`
+
+	Avatar          string            `json:"avatar"`
+	SuperChat       *SuperChatDetails `json:"superChat"`
+	MembershipEvent bool              `json:"membershipEvent"`
+}

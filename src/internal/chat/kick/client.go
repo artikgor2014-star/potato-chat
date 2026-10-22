@@ -1,0 +1,279 @@
+package kick
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"sync"
+	"time"
+
+	"potato-chat/internal/chat"
+	"potato-chat/internal/logging"
+
+	"github.com/gorilla/websocket"
+)
+
+const (
+	kickUA            = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+	heartbeatInterval = 30 * time.Second
+	maxBackoff        = 60 * time.Second
+)
+
+type MessageHandler func(chat.ChatMessage)
+type EventHandler func(event string, data any)
+
+type Client struct {
+	mu         sync.Mutex
+	cancel     context.CancelFunc
+	conn       *websocket.Conn
+	chatroomID int
+	pusher     PusherConfig
+
+	OnMessage MessageHandler
+	OnEvent   EventHandler
+}
+
+func NewClient(onMessage MessageHandler, onEvent EventHandler) *Client {
+	return &Client{
+		OnMessage: onMessage,
+		OnEvent:   onEvent,
+	}
+}
+
+func (c *Client) Connect(input string) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if c.cancel != nil {
+		c.cancel()
+		c.cancel = nil
+	}
+
+	if c.conn != nil {
+		c.conn.Close()
+		c.conn = nil
+	}
+
+	slug, err := ResolveChannelSlug(input)
+	if err != nil {
+		return fmt.Errorf("failed to resolve channel: %w", err)
+	}
+
+	channelID, chatroomID, err := FetchChannel(slug)
+	if err != nil {
+		return fmt.Errorf("failed to fetch chatroom ID: %w", err)
+	}
+
+	pusher, err := FetchPusherConfig(channelID)
+	if err != nil {
+		logging.Platform("kick").Warn("using default pusher config", "error", err)
+
+		pusher = defaultPusherConfig
+	}
+
+	conn, err := dialPusher(pusher)
+	if err != nil {
+		return fmt.Errorf("failed to connect to Pusher: %w", err)
+	}
+
+	if err := subscribe(conn, chatroomID); err != nil {
+		conn.Close()
+		return fmt.Errorf("failed to subscribe: %w", err)
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	c.cancel = cancel
+	c.conn = conn
+	c.chatroomID = chatroomID
+	c.pusher = pusher
+
+	c.OnEvent("chat:connected", map[string]string{"platform": string(chat.PlatformKick)})
+
+	go c.readLoop(ctx, conn)
+	go c.heartbeatLoop(ctx)
+
+	return nil
+}
+
+func (c *Client) Disconnect() {
+	c.mu.Lock()
+
+	if c.cancel != nil {
+		c.cancel()
+		c.cancel = nil
+	}
+
+	if c.conn != nil {
+		c.conn.Close()
+		c.conn = nil
+	}
+
+	c.mu.Unlock()
+
+	c.OnEvent("chat:disconnected", map[string]string{"platform": string(chat.PlatformKick)})
+}
+
+func (c *Client) readLoop(ctx context.Context, conn *websocket.Conn) {
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+
+		_, raw, err := conn.ReadMessage()
+		if err != nil {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+			}
+
+			go c.reconnect(ctx)
+
+			return
+		}
+
+		c.handleMessage(raw)
+	}
+}
+
+func (c *Client) reconnect(ctx context.Context) {
+	c.mu.Lock()
+	chatroomID := c.chatroomID
+	pusher := c.pusher
+	c.mu.Unlock()
+
+	backoff := time.Second
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-time.After(backoff):
+		}
+
+		logging.Platform("kick").Info("reconnecting")
+
+		conn, err := dialPusher(pusher)
+		if err != nil {
+			logging.Platform("kick").Warn("reconnect dial failed", "error", err)
+			backoff = min(backoff*2, maxBackoff)
+			continue
+		}
+
+		if err := subscribe(conn, chatroomID); err != nil {
+			conn.Close()
+			logging.Platform("kick").Warn("reconnect subscribe failed", "error", err)
+			backoff = min(backoff*2, maxBackoff)
+			continue
+		}
+
+		c.mu.Lock()
+		if ctx.Err() != nil {
+			c.mu.Unlock()
+			conn.Close()
+			return
+		}
+		if c.conn != nil {
+			c.conn.Close()
+		}
+		c.conn = conn
+		c.mu.Unlock()
+
+		go c.readLoop(ctx, conn)
+
+		return
+	}
+}
+
+func (c *Client) heartbeatLoop(ctx context.Context) {
+	ticker := time.NewTicker(heartbeatInterval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			ping, _ := json.Marshal(map[string]any{"event": "pusher:ping", "data": map[string]any{}})
+			c.mu.Lock()
+			if c.conn != nil {
+				c.conn.WriteMessage(websocket.TextMessage, ping) //nolint:errcheck
+			}
+			c.mu.Unlock()
+		}
+	}
+}
+
+func (c *Client) handleMessage(raw []byte) {
+	var pm PusherMessage
+	if err := json.Unmarshal(raw, &pm); err != nil {
+		return
+	}
+
+	switch pm.Event {
+	case "pusher:ping":
+		pong, _ := json.Marshal(map[string]any{"event": "pusher:pong", "data": map[string]any{}})
+		c.mu.Lock()
+		if c.conn != nil {
+			c.conn.WriteMessage(websocket.TextMessage, pong) //nolint:errcheck
+		}
+		c.mu.Unlock()
+
+	case `App\Events\ChatMessageEvent`:
+		// pm.Data is a JSON-encoded string; decode it to get the inner JSON string,
+		// then decode that string into KickChatMessage.
+		var inner string
+		if err := json.Unmarshal(pm.Data, &inner); err != nil {
+			logging.Platform("kick").Warn("failed to decode chat event data", "error", err)
+			return
+		}
+		var km KickChatMessage
+		if err := json.Unmarshal([]byte(inner), &km); err != nil {
+			logging.Platform("kick").Warn("failed to parse chat message", "error", err)
+			return
+		}
+		c.OnMessage(parseMessage(km))
+	}
+}
+
+// dialPusher opens a WebSocket connection to Pusher and waits for connection_established.
+func dialPusher(cfg PusherConfig) (*websocket.Conn, error) {
+	conn, _, err := websocket.DefaultDialer.Dial(cfg.URL(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	conn.SetReadDeadline(time.Now().Add(10 * time.Second))
+	_, raw, err := conn.ReadMessage()
+	conn.SetReadDeadline(time.Time{})
+
+	if err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("waiting for connection_established: %w", err)
+	}
+
+	var pm PusherMessage
+	if err := json.Unmarshal(raw, &pm); err != nil || pm.Event != "pusher:connection_established" {
+		conn.Close()
+		return nil, fmt.Errorf("unexpected event during handshake: %s", pm.Event)
+	}
+
+	return conn, nil
+}
+
+// subscribe sends the Pusher channel subscription message.
+func subscribe(conn *websocket.Conn, chatroomID int) error {
+	msg, err := json.Marshal(map[string]any{
+		"event": "pusher:subscribe",
+		"data": map[string]any{
+			"auth":    "",
+			"channel": fmt.Sprintf("chatrooms.%d.v2", chatroomID),
+		},
+	})
+	if err != nil {
+		return err
+	}
+	return conn.WriteMessage(websocket.TextMessage, msg)
+}

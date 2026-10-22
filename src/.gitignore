@@ -1,0 +1,35 @@
+# Go
+*bin/
+
+# Wails
+.task
+
+# Frontend
+node_modules
+frontend/dist
+
+# Logs
+*.log
+
+# Editor directories and files
+.vscode/settings.json
+.vscode/.debug.env
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+Thumbs.db
+
+# Lockfile (pnpm only)
+package-lock.json
+yarn.lock
+
+# Learning exercises output
+learning/**/config.json
+
+.scratch

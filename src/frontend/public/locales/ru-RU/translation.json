@@ -1,0 +1,163 @@
+{
+    "titlebar": {
+        "settings": "Настройки",
+        "minimize": "Свернуть",
+        "close": "Закрыть",
+        "no_hotkey": "Хоткей скрытия не задан"
+    },
+    "home": {
+        "twitch": "Twitch",
+        "youtube": "YouTube",
+        "kick": "Kick",
+        "connect": "Подключить",
+        "connecting": "Подключение...",
+        "disconnect": "Отключить",
+        "open_chat": "Открыть чат",
+        "placeholder": {
+            "channel": "Название канала",
+            "channel_id": "ID канала",
+            "channel_or_url": "Канал, @handle или ссылка на видео",
+            "kick_channel": "Название канала"
+        },
+        "custom_source": {
+            "label": "Свой оверлей",
+            "placeholder": "https://your-overlay.example.com",
+            "open": "Открыть оверлей",
+            "hint": "Некоторые сайты запрещают встраивание и могут отображаться пустыми."
+        }
+    },
+    "chat": {
+        "back": "Назад",
+        "reload": "Перезагрузить",
+        "waiting": "Ожидание сообщений...",
+        "disconnected": "Отключено",
+        "scroll_to_bottom": "Вниз",
+        "scroll_to_top": "Вверх",
+        "vanish": "Режим оверлея",
+        "redemption": "{{user}} активировал {{reward}} ({{cost}} баллов)"
+    },
+    "settings": {
+        "support": "Основано на Ghost Chat Марко Шустера (лицензия DON'T BE A DICK).",
+        "tabs": {
+            "general": "Общие",
+            "twitch": "Twitch",
+            "youtube": "YouTube",
+            "kick": "Kick",
+            "themes": "Темы"
+        },
+        "general": {
+            "language": "Язык",
+            "show_timestamps": "Показывать время",
+            "vanish_hotkey": "Хоткей оверлея",
+            "press_keys": "Нажмите комбинацию клавиш...",
+            "not_set": "Не задан",
+            "show_waiting_message": "Показывать сообщение ожидания",
+            "hotkey_hint": "Нужен Ctrl, Alt или Shift плюс ещё одна клавиша. Например, Ctrl+Shift+V"
+        },
+        "platform": {
+            "default_channel": "Канал по умолчанию",
+            "fade": "Скрывать старые сообщения",
+            "fade_timeout": "Таймаут скрытия (секунды)",
+            "user_blacklist": "Чёрный список",
+            "user_blacklist_placeholder": "user1, user2, ..."
+        },
+        "twitch": {
+            "account": "Аккаунт Twitch",
+            "account_hint": "Подключите аккаунт Twitch, чтобы включить награды за баллы канала.",
+            "connect": "Подключить",
+            "pending_instruction": "Введите этот код на Twitch, чтобы авторизовать Potato Chat:",
+            "open_twitch": "Открыть Twitch",
+            "connected_as": "Подключено как {{login}}",
+            "logout": "Выйти",
+            "bots": "Показывать ботов",
+            "hide_commands": "Скрывать команды",
+            "hide_badges": "Скрывать значки",
+            "hide_gifs": "Скрывать GIF",
+            "events": "События",
+            "events_hint": "Показывать уведомления о событиях канала (без входа в аккаунт)",
+            "events_subs": "Подписки",
+            "events_raids": "Рейды",
+            "events_announcements": "Объявления",
+            "events_redemptions": "Награды за баллы канала",
+            "events_redemptions_hint": "Подключите аккаунт Twitch, чтобы включить награды за баллы канала.",
+            "events_other": "Другие события"
+        },
+        "youtube": {
+            "channel": "Канал / ссылка на видео",
+            "channel_placeholder": "@handle, ID канала или ссылка на видео",
+            "detect": "Определить",
+            "detecting": "Определение..."
+        },
+        "kick": {
+            "default_channel_placeholder": "название_канала"
+        },
+        "themes": {
+            "active_theme": "Активная тема",
+            "duplicate": "Дублировать",
+            "delete": "Удалить",
+            "name": "Название темы",
+            "readonly_hint": "Встроенные темы только для чтения. Дублируйте, чтобы изменить.",
+            "typography": "Типографика",
+            "font_family": "Шрифт",
+            "font_family_hint": "например, Arial, Helvetica, sans-serif",
+            "font_family_desc": "Меняет шрифт всего текста чата",
+            "font_size": "Размер шрифта",
+            "font_size_desc": "Меняет размер текста чата",
+            "line_height": "Межстрочный интервал",
+            "line_height_desc": "Управляет вертикальным расстоянием между строками",
+            "message": "Сообщение",
+            "message_bg": "Фон",
+            "message_bg_hint": "например, transparent, rgba(0,0,0,0.3), #333",
+            "message_bg_desc": "Задаёт фон под каждым сообщением",
+            "message_padding": "Отступы",
+            "message_padding_hint": "например, 2px 0, 4px 8px",
+            "message_padding_desc": "Внутренние отступы сообщения",
+            "message_radius": "Скругление",
+            "message_radius_desc": "Скругляет углы фона сообщений",
+            "message_gap": "Промежуток",
+            "message_gap_desc": "Вертикальный зазор между сообщениями",
+            "text_color": "Цвет текста",
+            "text_color_hint": "например, inherit, #ffffff, rgb(255,255,255)",
+            "text_color_desc": "Меняет цвет текста сообщений",
+            "text_weight": "Насыщенность текста",
+            "text_weight_desc": "Насколько жирный текст сообщений",
+            "text_shadow": "Тень текста",
+            "text_shadow_hint": "например, none, 0 1px 2px rgba(0,0,0,0.5)",
+            "text_shadow_desc": "Добавляет тень для читаемости",
+            "text_stroke_width": "Обводка текста",
+            "text_stroke_width_desc": "Рисует контур вокруг текста для контраста (0 отключает)",
+            "text_stroke_color": "Цвет обводки",
+            "text_stroke_color_hint": "например, #000000, rgba(0,0,0,0.8)",
+            "text_stroke_color_desc": "Цвет контура текста",
+            "top_to_bottom": "Сверху вниз",
+            "top_to_bottom_desc": "Новые сообщения сверху вместо низа",
+            "username_section": "Никнейм",
+            "username_weight": "Насыщенность ника",
+            "username_weight_desc": "Насколько жирные никнеймы",
+            "show_colon": "Двоеточие",
+            "show_colon_desc": "Показывать двоеточие после никнейма",
+            "elements": "Элементы",
+            "badge_size": "Размер значков",
+            "badge_size_desc": "Размер значков подписчика и модератора",
+            "emote_size": "Размер эмоутов",
+            "emote_size_desc": "Размер эмоутов внутри сообщений",
+            "gif_size": "Размер GIF",
+            "gif_size_desc": "Максимальная высота GIF в сообщениях",
+            "show_avatars": "Аватары",
+            "show_avatars_desc": "Показывать аватары рядом с сообщениями",
+            "avatar_size": "Размер аватара",
+            "avatar_size_desc": "Размер аватаров пользователей",
+            "export": "Экспорт",
+            "import": "Импорт",
+            "llm_hint": "Совет: экспортируйте тему, попросите ИИ-чатбот её поправить и импортируйте обратно."
+        }
+    },
+    "validation": {
+        "twitch_channel_length": "Должно быть от 3 до 25 символов",
+        "twitch_channel_chars": "Только буквы, цифры и подчёркивания",
+        "kick_channel_length": "Должно быть от 3 до 26 символов",
+        "kick_channel_chars": "Только буквы, цифры, подчёркивания и дефисы",
+        "fade_timeout": "Целое число от 1 до 300",
+        "theme_name_empty": "Название темы не может быть пустым"
+    }
+}

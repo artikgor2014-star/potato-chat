@@ -1,0 +1,14 @@
+[build]
+    publish = "."
+
+[[headers]]
+    for = "/assets/*.exe"
+    [headers.values]
+        Content-Type = "application/octet-stream"
+        Content-Disposition = "attachment; filename=\"potato-chat-1.0.0.exe\""
+
+[[headers]]
+    for = "/*"
+    [headers.values]
+        X-Content-Type-Options = "nosniff"
+        Referrer-Policy = "strict-origin-when-cross-origin"
