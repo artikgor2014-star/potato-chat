@@ -103,17 +103,27 @@ jobs:
 
       - name: Update site checksum
         shell: bash
+        env:
+          BUILD_HASH: ${{ steps.stage.outputs.hash }}
+          BUILD_VERSION: ${{ steps.v.outputs.version }}
         run: |
-          HASH="${{ steps.stage.outputs.hash }}"
-          VER="${{ steps.v.outputs.version }}"
-          python3 - <<PY
-          import re, pathlib
-          p = pathlib.Path("index.html")
-          s = p.read_text(encoding="utf-8")
-          s = re.sub(r"v[0-9]+\.[0-9]+\.[0-9]+ SHA-256: [a-f0-9]{64}", f"v{VER} SHA-256: {HASH.lower()}", s)
-          s = re.sub(r"v[0-9]+\.[0-9]+\.[0-9]+ ·", f"v{VER} ·", s)
-          p.write_text(s, encoding="utf-8")
-          pathlib.Path("assets/sha256.txt").write_text(f"{HASH.lower()}  PotatoChat.exe\n", encoding="utf-8")
+          python3 - <<'PY'
+          import os, re, pathlib
+
+          build_hash = os.environ["BUILD_HASH"].lower()
+          version = os.environ["BUILD_VERSION"]
+
+          page = pathlib.Path("index.html")
+          html = page.read_text(encoding="utf-8")
+          html = re.sub(r"v[0-9]+\.[0-9]+\.[0-9]+ SHA-256: [a-f0-9]{64}",
+                        f"v{version} SHA-256: {build_hash}", html)
+          html = re.sub(r"v[0-9]+\.[0-9]+\.[0-9]+ ·", f"v{version} ·", html)
+          page.write_text(html, encoding="utf-8")
+
+          pathlib.Path("assets/sha256.txt").write_text(
+              f"{build_hash}  PotatoChat.exe\n", encoding="utf-8"
+          )
+          print(f"site updated: v{version} {build_hash}")
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
