@@ -10,6 +10,6 @@ Commands:
 Installers:
   - Architecture: x64
     InstallerUrl: https://github.com/artikgor2014-star/potato-chat/releases/download/v1.0.0/PotatoChat.exe
-    InstallerSha256: 3576E88CE9B210F4F8D73036BBBA721F59BAA9556E268E9ABED6371B3D571E5D8
+    InstallerSha256: 359C2E81207E5CD2717479A6345C976EE1F53A8954005439BBE007B59AB2A6BE
 ManifestType: installer
 ManifestVersion: 1.6.0

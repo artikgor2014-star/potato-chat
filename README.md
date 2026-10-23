@@ -47,7 +47,7 @@ draw over exclusive fullscreen.
 certutil -hashfile PotatoChat.exe SHA256
 ```
 
-`3576E88CE9B210F4F8D73036BBBA721F59BAA9556E268E9ABED6371B3D571E5D8`
+`359C2E81207E5CD2717479A6345C976EE1F53A8954005439BBE007B59AB2A6BE`
 
 The release binary is built from this repository by GitHub Actions.
 

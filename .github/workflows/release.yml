@@ -43,11 +43,17 @@ jobs:
         env:
           VERSION: ${{ github.ref_name }}
 
-      - name: Stage artifact
-        run: Copy-Item src/bin/potato-chat.exe PotatoChat.exe
+      - name: Stage artifact and checksum
+        run: |
+          Copy-Item src/bin/potato-chat.exe PotatoChat.exe
+          $hash = (Get-FileHash PotatoChat.exe -Algorithm SHA256).Hash
+          "$hash  PotatoChat.exe" | Out-File -Encoding ascii SHA256SUMS.txt
+          Write-Output "sha256: $hash"
 
       - name: Upload to release
         uses: softprops/action-gh-release@v2
         with:
-          files: PotatoChat.exe
+          files: |
+            PotatoChat.exe
+            SHA256SUMS.txt
           generate_release_notes: true
