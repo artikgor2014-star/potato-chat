@@ -3,51 +3,33 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Potato Chat — оверлей чата Twitch поверх всех окон</title>
+        <title>Potato Chat — чат Twitch поверх игры, клики проходят в игру</title>
         <meta
             name="description"
-            content="Бесплатный оверлей чата Twitch для стримеров. Прозрачный фон, поверх всех окон, клики проходят в игру. Windows."
+            content="Оверлей чата Twitch, который не мешает играть: прозрачный, поверх всех окон, клики проходят в игру. Один exe, без установки. Windows."
         />
-        <meta property="og:title" content="Potato Chat" />
+        <meta property="og:title" content="Potato Chat — чат поверх игры, который не мешает играть" />
         <meta
             property="og:description"
-            content="Оверлей чата Twitch поверх всех окон. Прозрачный, клики проходят в игру."
+            content="Прозрачный оверлей чата Twitch. Клики проходят в игру. 11 МБ, без установки, открытый код."
         />
-        <meta property="og:image" content="assets/icon.png" />
-        <link
-            rel="icon"
-            href="assets/icon.png"
-        />
-        <link
-            rel="stylesheet"
-            href="styles.css"
-        />
+        <meta property="og:image" content="assets/screenshot.png" />
+        <link rel="icon" href="assets/icon.png" />
+        <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
         <header class="nav">
             <div class="wrap nav-inner">
-                <a
-                    class="brand"
-                    href="#top"
-                >
-                    <img
-                        src="assets/icon.png"
-                        alt=""
-                        width="28"
-                        height="28"
-                    />
+                <a class="brand" href="#top">
+                    <img src="assets/icon.png" alt="" width="26" height="26" />
                     <span>Potato Chat</span>
                 </a>
                 <nav class="nav-links">
-                    <a href="#features">Возможности</a>
+                    <a href="#why">Зачем</a>
+                    <a href="#compare">Сравнение</a>
                     <a href="#install">Установка</a>
                     <a href="#faq">FAQ</a>
-                    <a
-                        class="btn btn-small"
-                        href="assets/potato-chat-1.0.0.exe"
-                        download
-                        >Скачать</a
-                    >
+                    <a class="btn btn-small" href="assets/potato-chat-1.0.0.exe" download>Скачать</a>
                 </nav>
             </div>
         </header>
@@ -56,118 +38,180 @@
             <section class="hero wrap">
                 <div class="hero-text">
                     <span class="pill">Windows · бесплатно · открытый код</span>
-                    <h1>Чат Twitch поверх всех окон</h1>
+                    <h1>Чат Twitch поверх игры.<br />Клики проходят в&nbsp;игру.</h1>
                     <p class="lead">
-                        Potato Chat держит чат вашего канала на экране во время игры: прозрачный фон, всегда сверху,
-                        клики проходят в приложение под ним. Один файл, без установки.
+                        Обычный чат поверх окон перехватывает мышь — играть невозможно. Potato Chat пропускает клики
+                        сквозь себя: чат виден, а прицел и WASD работают как обычно.
                     </p>
                     <div class="cta">
-                        <a
-                            class="btn btn-primary"
-                            href="assets/potato-chat-1.0.0.exe"
-                            download
-                        >
+                        <a class="btn btn-primary" href="assets/potato-chat-1.0.0.exe" download>
                             Скачать для Windows
                         </a>
-                        <span class="meta">v1.0.0 · 11.4 МБ · x64</span>
+                        <span class="meta">v1.0.0 · 11.4 МБ · x64 · без установки</span>
                     </div>
                     <p class="note">
-                        SmartScreen может предупредить — файл без платной подписи. Нажмите «Подробнее» → «Выполнить в
-                        любом случае».
+                        SmartScreen предупредит — файл без платной подписи. «Подробнее» → «Выполнить в любом случае».
+                        Хеш для проверки указан внизу страницы.
                     </p>
                 </div>
                 <div class="hero-art">
-                    <div class="mock">
-                        <div class="mock-title">
-                            <img
-                                src="assets/icon.png"
-                                alt=""
-                                width="14"
-                                height="14"
-                            />
-                            Potato Chat
-                        </div>
-                        <div class="mock-chat">
-                            <p><b style="color: #ff7ac6">nastya</b> го в кс</p>
-                            <p><b style="color: #7ad0ff">kirill_gg</b> ++</p>
-                            <p><b style="color: #ffd166">moder</b> стрим топ</p>
-                            <p><b style="color: #9ef07a">potato13582</b> сейчас зайдём</p>
-                            <p><b style="color: #ff7ac6">nastya</b> <span class="emote">PogChamp</span></p>
-                        </div>
-                    </div>
+                    <img
+                        src="assets/screenshot.png"
+                        alt="Potato Chat: окно чата Twitch с прозрачным фоном"
+                        width="418"
+                        height="938"
+                        loading="eager"
+                    />
                 </div>
             </section>
 
-            <section
-                id="features"
-                class="wrap section"
-            >
-                <h2>Что умеет</h2>
+            <section id="why" class="wrap section">
+                <h2>Почему это не «ещё один оверлей»</h2>
                 <div class="grid">
                     <article class="card">
-                        <h3>Поверх всего</h3>
-                        <p>Окно всегда сверху: игра, браузер, редактор — чат не теряется.</p>
+                        <h3>Клики сквозь окно</h3>
+                        <p>
+                            Главное отличие. В Chatterino и любом окне с always-on-top мышь попадает в чат, а не в
+                            игру. Здесь — наоборот, пока не нажмёшь Ctrl+Shift+H.
+                        </p>
                     </article>
                     <article class="card">
-                        <h3>Прозрачный фон</h3>
-                        <p>Виден только текст с тенью. Ничего не перекрывает картинку игры.</p>
+                        <h3>Только текст, без рамки</h3>
+                        <p>
+                            В режиме оверлея исчезают заголовок, кнопки и фон. На экране остаются сообщения с тенью —
+                            читаемо на любой картинке.
+                        </p>
                     </article>
                     <article class="card">
-                        <h3>Клики проходят</h3>
-                        <p>В режиме оверлея мышь работает с игрой, а не с чатом. Ctrl+Shift+H — вернуть управление.</p>
+                        <h3>Один файл, 11 МБ</h3>
+                        <p>
+                            Не Electron на 150 МБ. Не установщик. Положил в папку, запустил — работает. Настройки в
+                            одном JSON.
+                        </p>
+                    </article>
+                    <article class="card">
+                        <h3>Русский интерфейс</h3>
+                        <p>Полный перевод, включён по умолчанию. Chatterino и Streamlabs — только на английском.</p>
                     </article>
                     <article class="card">
                         <h3>Twitch, YouTube, Kick</h3>
-                        <p>Три платформы одновременно. Свои оверлеи по URL тоже поддерживаются.</p>
+                        <p>Три платформы одновременно. Плюс свой оверлей по URL, если нужен нестандартный виджет.</p>
                     </article>
                     <article class="card">
-                        <h3>Темы и шрифты</h3>
-                        <p>Размер, цвет, обводка, плашки, эмоуты, скрытие старых сообщений — всё настраивается.</p>
-                    </article>
-                    <article class="card">
-                        <h3>События канала</h3>
-                        <p>Подписки, рейды, объявления и награды за баллы — прямо в ленте чата.</p>
+                        <h3>Без телеметрии</h3>
+                        <p>
+                            Не отправляет отчёты, не проверяет обновления на чужом сервере, не требует аккаунта для
+                            чтения чата.
+                        </p>
                     </article>
                 </div>
             </section>
 
-            <section
-                id="install"
-                class="wrap section"
-            >
-                <h2>Установка</h2>
+            <section id="compare" class="wrap section">
+                <h2>Чем отличается</h2>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="hl">Potato Chat</th>
+                                <th>Chatterino</th>
+                                <th>OBS Browser Source</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Видно стримеру на экране</td>
+                                <td class="hl yes">да</td>
+                                <td class="yes">да</td>
+                                <td class="no">нет</td>
+                            </tr>
+                            <tr>
+                                <td>Клики проходят в игру</td>
+                                <td class="hl yes">да</td>
+                                <td class="no">нет</td>
+                                <td class="yes">да</td>
+                            </tr>
+                            <tr>
+                                <td>Видно зрителям на стриме</td>
+                                <td class="yes">через захват окна</td>
+                                <td class="no">нет</td>
+                                <td class="yes">да</td>
+                            </tr>
+                            <tr>
+                                <td>Русский интерфейс</td>
+                                <td class="hl yes">да</td>
+                                <td class="no">нет</td>
+                                <td class="no">нет</td>
+                            </tr>
+                            <tr>
+                                <td>Размер</td>
+                                <td class="hl">11 МБ</td>
+                                <td>~40 МБ</td>
+                                <td>в составе OBS</td>
+                            </tr>
+                            <tr>
+                                <td>Установка</td>
+                                <td class="hl">exe, без установки</td>
+                                <td>установщик</td>
+                                <td>нужен OBS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="note">
+                    Chatterino — отличный клиент, но он для чтения и модерации, а не для игры с чатом на экране.
+                    OBS Browser Source показывает чат зрителям, но не тебе.
+                </p>
+            </section>
+
+            <section id="install" class="wrap section">
+                <h2>Установка — 30 секунд</h2>
                 <ol class="steps">
                     <li>
-                        <h3>Скачайте файл</h3>
-                        <p><code>potato-chat-1.0.0.exe</code> — один исполняемый файл, установка не нужна.</p>
+                        <h3>Скачайте exe</h3>
+                        <p>11 МБ, один файл. Установщика нет, реестр не трогается.</p>
                     </li>
                     <li>
                         <h3>Запустите</h3>
-                        <p>Положите в любую папку и запустите. Если SmartScreen ругается — «Подробнее» → «Выполнить».</p>
+                        <p>Если SmartScreen ругается — «Подробнее» → «Выполнить в любом случае».</p>
                     </li>
                     <li>
                         <h3>Введите канал</h3>
-                        <p>Название канала Twitch → «Подключить» → «Открыть чат». Логин не требуется, чат читается анонимно.</p>
+                        <p>Ник на Twitch → «Подключить» → «Открыть чат». Логин не нужен, чат читается анонимно.</p>
                     </li>
                     <li>
-                        <h3>Включите оверлей</h3>
-                        <p>Иконка глаза в заголовке или <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>H</kbd>. Игру переведите в borderless / windowed fullscreen.</p>
+                        <h3>Нажмите Ctrl+Shift+H</h3>
+                        <p>
+                            Чат станет прозрачным, клики начнут проходить в игру. Игру переведите в
+                            «Оконный без рамки».
+                        </p>
                     </li>
                 </ol>
+                <div class="shot-row">
+                    <img
+                        src="assets/screenshot-home.png"
+                        alt="Главный экран Potato Chat: подключение к Twitch, YouTube, Kick"
+                        width="424"
+                        height="814"
+                        loading="lazy"
+                    />
+                    <p class="note">
+                        Главный экран: вводите ник канала — подключение анонимное, логин не требуется. Ниже —
+                        YouTube, Kick и свой оверлей по URL.
+                    </p>
+                </div>
                 <div class="warn">
-                    <strong>Важно:</strong> в эксклюзивном полноэкранном режиме игры ни одно оверлей-окно не отображается.
-                    Переключите игру на «Оконный без рамки».
+                    <strong>Важно:</strong> в эксклюзивном полноэкранном режиме ни одно оверлей-окно не
+                    отображается. Переключите игру на «Оконный без рамки» — это одна галочка в настройках графики.
                 </div>
             </section>
 
-            <section
-                id="faq"
-                class="wrap section"
-            >
+            <section id="faq" class="wrap section">
                 <h2>Вопросы</h2>
                 <details>
                     <summary>Чат не появляется поверх игры</summary>
-                    <p>Игра в эксклюзивном фуллскрине. Поставьте borderless. Также проверьте, что включён режим оверлея (иконка глаза).</p>
+                    <p>Игра в эксклюзивном фуллскрине. Поставьте «Оконный без рамки». Также проверьте, что включён режим оверлея — иконка глаза или Ctrl+Shift+H.</p>
                 </details>
                 <details>
                     <summary>Клики не доходят до игры</summary>
@@ -175,27 +219,27 @@
                 </details>
                 <details>
                     <summary>Можно ли писать в чат?</summary>
-                    <p>Нет, Potato Chat только читает. Для отправки сообщений используйте Chatterino или сайт Twitch.</p>
+                    <p>В 1.0.0 — нет, только чтение. Отправка сообщений и команды модерации в планах.</p>
                 </details>
                 <details>
-                    <summary>Будут ли награды за баллы канала?</summary>
-                    <p>Да, если подключить аккаунт Twitch в настройках. Без входа работают подписки, рейды и объявления.</p>
+                    <summary>Как вывести чат зрителям в OBS</summary>
+                    <p>Источник → «Захват окна» → выберите <code>potato-chat</code> → метод «Windows 10 (1903 и новее)» → галочка «Разрешить прозрачность». Поставьте источник выше захвата игры.</p>
                 </details>
                 <details>
-                    <summary>Где хранятся настройки?</summary>
+                    <summary>Где хранятся настройки</summary>
                     <p><code>%APPDATA%\potato-chat\config.json</code>. Удалите файл, чтобы сбросить.</p>
                 </details>
                 <details>
                     <summary>Это безопасно?</summary>
-                    <p>Приложение не внедряется в процессы игры и не читает память — это обычное окно Windows. Исходники открыты.</p>
+                    <p>Приложение не внедряется в процессы игры, не читает память, не ставит драйверов — обычное окно Windows. Исходники открыты, exe собирается в GitHub Actions из этого же кода.</p>
                 </details>
             </section>
 
             <section class="wrap section">
-                <h2>Контрольная сумма</h2>
+                <h2>Проверка файла</h2>
                 <p class="mono">SHA-256: 3576e88ce9b210f4f8d73036bba721f59baa9556e268e9abed6371b3d571e5d8</p>
                 <p class="note">
-                    Проверить: <code>certutil -hashfile potato-chat-1.0.0.exe SHA256</code>
+                    Сверьте: <code>certutil -hashfile potato-chat-1.0.0.exe SHA256</code>
                 </p>
             </section>
         </main>
@@ -204,8 +248,8 @@
             <div class="wrap footer-inner">
                 <p>Potato Chat 1.0.0 · Windows x64</p>
                 <p class="muted">
-                    Основано на <a href="https://github.com/Enubia/ghost-chat">Ghost Chat</a> Марко Шустера, лицензия
-                    DON'T BE A DICK.
+                    Форк <a href="https://github.com/Enubia/ghost-chat">Ghost Chat</a> Марко Шустера, лицензия
+                    DON'T BE A DICK. Исходники в репозитории.
                 </p>
             </div>
         </footer>

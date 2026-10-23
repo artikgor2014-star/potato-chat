@@ -392,3 +392,88 @@ details p {
         display: none;
     }
 }
+
+/* screenshot */
+.hero-art img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    display: block;
+}
+
+/* comparison table */
+.table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+    min-width: 620px;
+}
+
+th,
+td {
+    padding: 13px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: var(--surface-2);
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--muted);
+}
+
+th.hl {
+    color: var(--accent);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+td.hl {
+    background: rgba(240, 178, 90, 0.05);
+    color: var(--text);
+    font-weight: 600;
+}
+
+.yes {
+    color: #7ed08a;
+}
+
+.no {
+    color: #8b93a1;
+}
+
+/* install screenshot */
+.shot-row {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-top: 26px;
+    flex-wrap: wrap;
+}
+
+.shot-row img {
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.shot-row .note {
+    flex: 1;
+    min-width: 240px;
+    max-width: 46ch;
+    padding-top: 6px;
+}
