@@ -4,15 +4,38 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build, e.g. 1.0.1 (creates tag v1.0.1)'
+        required: true
+        type: string
 
 permissions:
   contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: v
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RAW="${{ inputs.version }}"
+          else
+            RAW="${GITHUB_REF_NAME}"
+          fi
+          CLEAN="${RAW#v}"
+          echo "version=$CLEAN" >> "$GITHUB_OUTPUT"
+          echo "tag=v$CLEAN" >> "$GITHUB_OUTPUT"
+          echo "building version $CLEAN (tag v$CLEAN)"
 
       - uses: actions/setup-go@v5
         with:
@@ -41,19 +64,68 @@ jobs:
         working-directory: src
         run: wails3 build
         env:
-          VERSION: ${{ github.ref_name }}
+          VERSION: ${{ steps.v.outputs.version }}
 
       - name: Stage artifact and checksum
+        id: stage
+        shell: pwsh
         run: |
           Copy-Item src/bin/potato-chat.exe PotatoChat.exe
           $hash = (Get-FileHash PotatoChat.exe -Algorithm SHA256).Hash
           "$hash  PotatoChat.exe" | Out-File -Encoding ascii SHA256SUMS.txt
+          "hash=$hash" | Out-File -Append -Encoding utf8 $env:GITHUB_OUTPUT
           Write-Output "sha256: $hash"
 
-      - name: Upload to release
+      - name: Create tag if missing
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          git tag "${{ steps.v.outputs.tag }}" 2>/dev/null || echo "tag already exists"
+          git push origin "${{ steps.v.outputs.tag }}" 2>/dev/null || echo "tag already pushed"
+
+      - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.v.outputs.tag }}
+          name: Potato Chat ${{ steps.v.outputs.version }}
           files: |
             PotatoChat.exe
             SHA256SUMS.txt
           generate_release_notes: true
+          body: |
+            Portable Windows x64 build. No installation required.
+
+            SHA-256: `${{ steps.stage.outputs.hash }}`
+
+            Built from this repository by GitHub Actions.
+
+            The game must run in borderless / windowed fullscreen — exclusive fullscreen blocks every overlay.
+
+      - name: Update site checksum
+        shell: bash
+        run: |
+          HASH="${{ steps.stage.outputs.hash }}"
+          VER="${{ steps.v.outputs.version }}"
+          python3 - <<PY
+          import re, pathlib
+          p = pathlib.Path("index.html")
+          s = p.read_text(encoding="utf-8")
+          s = re.sub(r"v[0-9]+\.[0-9]+\.[0-9]+ SHA-256: [a-f0-9]{64}", f"v{VER} SHA-256: {HASH.lower()}", s)
+          s = re.sub(r"v[0-9]+\.[0-9]+\.[0-9]+ ·", f"v{VER} ·", s)
+          p.write_text(s, encoding="utf-8")
+          pathlib.Path("assets/sha256.txt").write_text(f"{HASH.lower()}  PotatoChat.exe\n", encoding="utf-8")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html assets/sha256.txt
+          git commit -m "Update site checksum for ${{ steps.v.outputs.tag }}" || echo "nothing to commit"
+          git push || echo "push skipped"
+
+      - name: Summary
+        shell: bash
+        run: |
+          echo "### Potato Chat ${{ steps.v.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Download: https://github.com/${{ github.repository }}/releases/download/${{ steps.v.outputs.tag }}/PotatoChat.exe" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "SHA-256: \`${{ steps.stage.outputs.hash }}\`" >> $GITHUB_STEP_SUMMARY
