@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.6.0.schema.json
+PackageIdentifier: PotatoChat.PotatoChat
+PackageVersion: 1.0.0
+PackageLocale: en-US
+Publisher: Potato Chat
+PublisherUrl: https://github.com/artikgor2014-star/potato-chat
+PublisherSupportUrl: https://github.com/artikgor2014-star/potato-chat/issues
+PackageName: Potato Chat
+PackageUrl: https://github.com/artikgor2014-star/potato-chat
+License: DON'T BE A DICK PUBLIC LICENSE
+LicenseUrl: https://github.com/artikgor2014-star/potato-chat/blob/main/src/LICENSE.md
+ShortDescription: Twitch chat overlay that lets clicks pass through to the game
+Description: Transparent always-on-top Twitch chat overlay for streamers. Unlike a regular always-on-top window, clicks pass through to the game underneath, so you can keep chat on screen while playing. Supports Twitch, YouTube and Kick, custom themes, and channel events. Single portable executable, no installation.
+Tags:
+  - twitch
+  - chat
+  - overlay
+  - streaming
+  - streamer
+  - obs
+ManifestType: defaultLocale
+ManifestVersion: 1.6.0
