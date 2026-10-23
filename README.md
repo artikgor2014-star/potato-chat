@@ -65,6 +65,7 @@ index.html, styles.css, assets/   landing page (GitHub Pages)
 src/                              application source (Go + React, Wails v3)
 winget/                           winget manifests
 .github/workflows/                Pages deploy, tagged Windows release build
+PUBLISH.md                        how to ship a new version (one click)
 PROMOTION.md                      where and how to announce this
 ```
 
