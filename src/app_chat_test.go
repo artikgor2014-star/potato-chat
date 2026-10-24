@@ -59,7 +59,7 @@ func newTestApp() (*App, *fakeClient, *[]emitRecord) {
 		records = append(records, emitRecord{event: event, data: data})
 	}
 
-	onMessage, _ := makeHandlers(a.emit)
+	onMessage := a.publish
 	fc.onMessage = onMessage
 
 	a.clients = map[chat.Platform]chat.Client{

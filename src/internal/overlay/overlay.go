@@ -86,6 +86,9 @@ func (s *Server) Start(cfg config.OverlayConfig) {
 
 	mux := http.NewServeMux()
 	mux.Handle("/", noCache(http.FileServer(http.FS(staticRoot))))
+	mux.HandleFunc("/followers", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFileFS(w, r, staticRoot, "followers.html")
+	})
 	mux.Handle("/events", noCache(http.HandlerFunc(s.handleEvents)))
 	mux.Handle("/api/config", noCache(http.HandlerFunc(s.handleConfig)))
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
@@ -237,18 +240,20 @@ func (s *Server) handleEvents(w http.ResponseWriter, r *http.Request) {
 }
 
 type overlayConfigResponse struct {
-	Theme  config.Theme        `json:"theme"`
-	Twitch config.TwitchConfig `json:"twitch"`
-	ShowTS bool                `json:"showTimestamps"`
+	Theme     config.Theme           `json:"theme"`
+	Twitch    config.TwitchConfig    `json:"twitch"`
+	Followers config.FollowersConfig `json:"followers"`
+	ShowTS    bool                   `json:"showTimestamps"`
 }
 
 func (s *Server) handleConfig(w http.ResponseWriter, _ *http.Request) {
 	cfg := s.cfgFn()
 
 	resp := overlayConfigResponse{
-		Theme:  activeTheme(cfg),
-		Twitch: cfg.Twitch,
-		ShowTS: cfg.General.ShowTimestamps,
+		Theme:     activeTheme(cfg),
+		Twitch:    cfg.Twitch,
+		Followers: cfg.Followers,
+		ShowTS:    cfg.General.ShowTimestamps,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

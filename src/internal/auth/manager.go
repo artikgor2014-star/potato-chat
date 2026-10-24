@@ -15,7 +15,9 @@ import (
 
 const (
 	TwitchClientID = "0admd395pt3htwaqyk1ozziak7ci4b"
-	TwitchScope    = "channel:read:redemptions"
+	// Follows need moderator:read:followers; the broadcaster moderates their own
+	// channel, so one user token covers both topics.
+	TwitchScope = "channel:read:redemptions moderator:read:followers"
 
 	defaultBaseURL   = "https://id.twitch.tv/oauth2"
 	deviceGrantType  = "urn:ietf:params:oauth:grant-type:device_code"

@@ -5,13 +5,14 @@ import { useTranslation } from 'react-i18next';
 
 import { useConfigStore } from '@/stores/config';
 import { Icon } from '@/ui/Icon';
-import { ChannelTab, GeneralTab, ThemeTab } from './settings/GeneralTabs';
+import { ChannelTab, FollowersTab, GeneralTab, ThemeTab } from './settings/GeneralTabs';
 import { OverlayTab } from './settings/OverlayTab';
 
 const TABS = [
     { key: 'general', icon: 'sliders', label: 'settings.tabs.general' },
     { key: 'channel', icon: 'broadcast', label: 'settings.tabs.channel' },
     { key: 'overlay', icon: 'layers', label: 'settings.tabs.overlay' },
+    { key: 'followers', icon: 'spark', label: 'settings.tabs.followers' },
     { key: 'themes', icon: 'palette', label: 'settings.tabs.themes' },
 ] as const satisfies readonly { key: string; icon: IconName; label: string }[];
 
@@ -63,6 +64,7 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
                 {tab === 'general' && <GeneralTab />}
                 {tab === 'channel' && <ChannelTab />}
                 {tab === 'overlay' && <OverlayTab />}
+                {tab === 'followers' && <FollowersTab />}
                 {tab === 'themes' && <ThemeTab />}
             </div>
 

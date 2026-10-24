@@ -54,7 +54,8 @@
             "general": "General",
             "channel": "Channel",
             "overlay": "Overlay",
-            "themes": "Themes"
+            "themes": "Themes",
+            "followers": "Followers"
         },
         "appearance": {
             "title": "Appearance"
@@ -140,6 +141,15 @@
             "listening": "Press a combination…",
             "empty": "Not set",
             "clear": "Clear"
+        },
+        "followers": {
+            "title": "New followers",
+            "duration": "Keep on screen",
+            "seconds": "s",
+            "duration_hint": "How long the card stays visible after a follow.",
+            "requirements": "Requires a Twitch sign-in and a connected channel. Followers arrive over EventSub, a separate data channel — chat works without it.",
+            "obs_title": "For OBS",
+            "obs_hint": "Add the overlay URL with the /followers path as a Browser source. The card appears on its own."
         }
     },
     "validation": {
@@ -149,5 +159,21 @@
         "kick_channel_chars": "Only letters, digits, underscore and hyphen",
         "fade_timeout": "Whole number from 1 to 300",
         "theme_name_empty": "Name cannot be empty"
+    },
+    "account": {
+        "title": "Twitch account",
+        "disconnected": "not connected",
+        "connect": "Sign in to Twitch",
+        "logout": "Sign out",
+        "open_twitch": "Open Twitch",
+        "code_hint": "Enter this code on Twitch:",
+        "connected_hint": "Needed for followers and channel point redemptions.",
+        "disconnected_hint": "Needed for followers and redemptions. Chat works without signing in."
+    },
+    "followers": {
+        "open": "Followers",
+        "new": "new follower",
+        "waiting": "Waiting for new followers",
+        "count": "this session"
     }
 }

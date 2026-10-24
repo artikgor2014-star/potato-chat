@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import logo from '@/assets/potato.png';
 import { ChatScreen } from '@/screens/Chat';
 import { ConnectScreen } from '@/screens/Connect';
+import { FollowersScreen } from '@/screens/Followers';
 import { SettingsSheet } from '@/screens/Settings';
 import { SourceScreen } from '@/screens/Source';
 import { useAuthStore } from '@/stores/auth';
@@ -16,7 +17,7 @@ import { useConnectionStore } from '@/stores/connection';
 import { Icon } from '@/ui/Icon';
 import { applyAppearance } from '@/utils/appearance';
 
-type Screen = 'connect' | 'chat' | 'source';
+type Screen = 'connect' | 'chat' | 'followers' | 'source';
 
 // Wails delivers event payloads as `any`; narrow once at the boundary instead
 // of asserting a shape at each read site.
@@ -239,7 +240,18 @@ export default function App() {
                 </div>
             </header>
 
-            {screen === 'connect' && <ConnectScreen onOpenChat={() => setScreen('chat')} />}
+            {screen === 'connect' && (
+                <ConnectScreen
+                    onOpenChat={() => setScreen('chat')}
+                    onOpenFollowers={() => setScreen('followers')}
+                />
+            )}
+            {screen === 'followers' && (
+                <FollowersScreen
+                    onBack={() => setScreen('connect')}
+                    vanished={vanished}
+                />
+            )}
             {screen === 'chat' && (
                 <ChatScreen
                     onBack={() => setScreen('connect')}

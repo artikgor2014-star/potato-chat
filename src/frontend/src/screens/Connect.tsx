@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useConfigStore } from '@/stores/config';
 import { useConnectionStore } from '@/stores/connection';
+import { AccountPanel } from '@/ui/AccountPanel';
 import { Icon } from '@/ui/Icon';
 import { Field, Segmented } from '@/ui/controls';
 import { isValidSourceURL } from '@/utils/customSource';
@@ -23,7 +24,7 @@ const PLATFORMS: { key: PlatformKey; platform: Platform; labelKey: string; place
     { key: 'kick', platform: Platform.PlatformKick, labelKey: 'home.kick', placeholderKey: 'home.placeholder.kick_channel' },
 ];
 
-export function ConnectScreen({ onOpenChat }: { onOpenChat: () => void }) {
+export function ConnectScreen({ onOpenChat, onOpenFollowers }: { onOpenChat: () => void; onOpenFollowers: () => void }) {
     const { t } = useTranslation();
     const config = useConfigStore((s) => s.config);
     const update = useConfigStore((s) => s.update);
@@ -212,18 +213,32 @@ export function ConnectScreen({ onOpenChat }: { onOpenChat: () => void }) {
                 </button>
             </section>
 
+            <AccountPanel />
+
             <div className="launch">
-                <button
-                    className="btn btn--primary btn--block"
-                    disabled={online.length === 0}
-                    onClick={onOpenChat}
-                >
-                    {t('home.open_chat')}
-                    <Icon
-                        name="down"
-                        size={15}
-                    />
-                </button>
+                <div className="launch__row">
+                    <button
+                        className="btn btn--primary"
+                        disabled={online.length === 0}
+                        onClick={onOpenChat}
+                    >
+                        {t('home.open_chat')}
+                        <Icon
+                            name="down"
+                            size={15}
+                        />
+                    </button>
+                    <button
+                        className="btn btn--ghost"
+                        onClick={onOpenFollowers}
+                    >
+                        {t('followers.open')}
+                        <Icon
+                            name="spark"
+                            size={15}
+                        />
+                    </button>
+                </div>
                 <span className="launch__hint">{t('connect.launch_hint')}</span>
             </div>
         </div>

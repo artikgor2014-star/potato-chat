@@ -1,0 +1,109 @@
+/* Follower card for the OBS overlay. Shares overlay.css for the reset. */
+
+.stage {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 100%;
+    padding: 14px 20px;
+    border-radius: 18px;
+    border: 1px solid hsla(var(--hue, 270), 70%, 62%, 0.45);
+    background:
+        linear-gradient(135deg, hsla(var(--hue, 270), 70%, 40%, 0.26), transparent 72%),
+        rgba(9, 6, 14, 0.82);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+        0 20px 48px -22px hsla(var(--hue, 270), 80%, 50%, 0.95);
+    animation: card-in 520ms cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+.card.out {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+    transition:
+        opacity 420ms ease,
+        transform 420ms ease;
+}
+
+@keyframes card-in {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.93);
+    }
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    inset: -40% -10%;
+    background: linear-gradient(100deg, transparent 42%, hsla(var(--hue, 270), 100%, 82%, 0.18) 50%, transparent 58%);
+    animation: sweep 1100ms ease-out;
+    pointer-events: none;
+}
+
+@keyframes sweep {
+    from {
+        transform: translateX(-70%);
+    }
+
+    to {
+        transform: translateX(70%);
+    }
+}
+
+.avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(150deg, hsl(var(--hue, 270), 72%, 58%), hsl(var(--hue, 270), 68%, 36%));
+    box-shadow:
+        0 0 0 2px rgba(9, 6, 14, 0.92),
+        0 0 20px hsla(var(--hue, 270), 85%, 55%, 0.55);
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.label {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: hsl(var(--hue, 270), 62%, 76%);
+}
+
+.name {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

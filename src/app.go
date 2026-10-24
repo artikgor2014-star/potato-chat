@@ -3,6 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"potato-chat/internal/auth"
 	"potato-chat/internal/chat"
 	"potato-chat/internal/chat/kick"
@@ -11,10 +15,6 @@ import (
 	"potato-chat/internal/config"
 	ghHotkey "potato-chat/internal/hotkey"
 	"potato-chat/internal/overlay"
-	"log/slog"
-	"os"
-	"os/exec"
-	"path/filepath"
 	"runtime"
 	"sync"
 
@@ -58,7 +58,15 @@ func NewApp(cfg *config.Config, configPath string, version string) *App {
 
 	a.overlay = overlay.New(a.GetConfig)
 
-	a.redemptions = twitch.NewEventSub(a.publish, twitchAuthAdapter{m: a.auth}, a.handleRedemptionAuthLost)
+	a.redemptions = twitch.NewEventSub(
+		a.publish,
+		twitchAuthAdapter{m: a.auth},
+		a.handleRedemptionAuthLost,
+		twitch.WithSubscriptions(
+			twitch.Subscription{Type: twitch.SubscriptionChannelPoints, Version: "1"},
+			twitch.Subscription{Type: twitch.SubscriptionFollow, Version: "2", SelfAsModerator: true},
+		),
+	)
 
 	return a
 }

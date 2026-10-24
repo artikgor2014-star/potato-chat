@@ -54,7 +54,8 @@
             "general": "Allgemein",
             "channel": "Kanal",
             "overlay": "Overlay",
-            "themes": "Themes"
+            "themes": "Themes",
+            "followers": "Follower"
         },
         "appearance": {
             "title": "Darstellung"
@@ -140,6 +141,15 @@
             "listening": "Kombination drücken…",
             "empty": "Nicht gesetzt",
             "clear": "Zurücksetzen"
+        },
+        "followers": {
+            "title": "Neue Follower",
+            "duration": "Anzeigedauer",
+            "seconds": "s",
+            "duration_hint": "Wie lange die Karte nach einem Follow sichtbar bleibt.",
+            "requirements": "Erfordert Twitch-Anmeldung und einen verbundenen Kanal. Follower kommen über EventSub, einen eigenen Datenkanal — der Chat läuft auch ohne.",
+            "obs_title": "Für OBS",
+            "obs_hint": "Overlay-Adresse mit dem Pfad /followers als Browser-Quelle hinzufügen. Die Karte erscheint von selbst."
         }
     },
     "validation": {
@@ -149,5 +159,21 @@
         "kick_channel_chars": "Nur Buchstaben, Ziffern, Unterstrich und Bindestrich",
         "fade_timeout": "Ganze Zahl von 1 bis 300",
         "theme_name_empty": "Name darf nicht leer sein"
+    },
+    "account": {
+        "title": "Twitch-Konto",
+        "disconnected": "nicht verbunden",
+        "connect": "Bei Twitch anmelden",
+        "logout": "Abmelden",
+        "open_twitch": "Twitch öffnen",
+        "code_hint": "Diesen Code bei Twitch eingeben:",
+        "connected_hint": "Nötig für Follower und Kanalpunkte-Einlösungen.",
+        "disconnected_hint": "Nötig für Follower und Einlösungen. Der Chat funktioniert ohne Anmeldung."
+    },
+    "followers": {
+        "open": "Follower",
+        "new": "neuer Follower",
+        "waiting": "Warte auf neue Follower",
+        "count": "diese Sitzung"
     }
 }

@@ -18,6 +18,21 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// Subscription is one EventSub topic registered on the shared socket.
+// Condition holds the fields beyond broadcaster_user_id, e.g. moderator_user_id
+// for channel.follow.
+type Subscription struct {
+	Type    string
+	Version string
+
+	// Condition holds extra fields such as moderator_user_id.
+	Condition map[string]string
+
+	// SelfAsModerator fills moderator_user_id with the authorising user's id.
+	// channel.follow requires it, and the broadcaster moderates their own chat.
+	SelfAsModerator bool
+}
+
 const (
 	msgWelcome      = "session_welcome"
 	msgKeepalive    = "session_keepalive"
@@ -25,13 +40,22 @@ const (
 	msgReconnect    = "session_reconnect"
 	msgRevocation   = "revocation"
 
-	eventSubWSURL          = "wss://eventsub.wss.twitch.tv/ws"
-	helixBaseURL           = "https://api.twitch.tv/helix"
-	subscriptionType       = "channel.channel_points_custom_reward_redemption.add"
+	eventSubWSURL = "wss://eventsub.wss.twitch.tv/ws"
+	helixBaseURL  = "https://api.twitch.tv/helix"
+
+	// SubscriptionChannelPoints is the redemption topic.
+	SubscriptionChannelPoints = "channel.channel_points_custom_reward_redemption.add"
+	// SubscriptionFollow is the new-follower topic.
+	SubscriptionFollow     = "channel.follow"
 	keepaliveGrace         = 3 * time.Second
 	welcomeTimeout         = 10 * time.Second
 	subscriptionRetryLimit = 3
 )
+
+// defaultSubscriptions keeps the historical behaviour: redemptions only.
+func defaultSubscriptions() []Subscription {
+	return []Subscription{{Type: SubscriptionChannelPoints, Version: "1"}}
+}
 
 var (
 	ErrAuthPermanent = errors.New("auth permanently lost")
@@ -57,6 +81,7 @@ const (
 
 type parsedFrame struct {
 	kind         frameKind
+	subType      string
 	sessionID    string
 	keepalive    int
 	reconnectURL string
@@ -74,7 +99,10 @@ type eventSubEnvelope struct {
 			KeepaliveTimeoutSeconds int    `json:"keepalive_timeout_seconds"`
 			ReconnectURL            string `json:"reconnect_url"`
 		} `json:"session"`
-		Event json.RawMessage `json:"event"`
+		Event        json.RawMessage `json:"event"`
+		Subscription struct {
+			Type string `json:"type"`
+		} `json:"subscription"`
 	} `json:"payload"`
 }
 
@@ -98,15 +126,29 @@ func parseFrame(raw []byte) (parsedFrame, error) {
 	case msgKeepalive:
 		f.kind = frameKeepalive
 	case msgNotification:
-		var e RedemptionEvent
-
-		if err := json.Unmarshal(env.Payload.Event, &e); err != nil {
-			return parsedFrame{}, fmt.Errorf("decode redemption event: %w", err)
-		}
-
 		f.kind = frameNotification
-		f.message = RedemptionToMessage(e)
-		f.hasMessage = true
+		f.subType = env.Payload.Subscription.Type
+
+		switch f.subType {
+		case SubscriptionFollow:
+			var e FollowEvent
+
+			if err := json.Unmarshal(env.Payload.Event, &e); err != nil {
+				return parsedFrame{}, fmt.Errorf("decode follow event: %w", err)
+			}
+
+			f.message = FollowToMessage(e)
+			f.hasMessage = true
+		default:
+			var e RedemptionEvent
+
+			if err := json.Unmarshal(env.Payload.Event, &e); err != nil {
+				return parsedFrame{}, fmt.Errorf("decode redemption event: %w", err)
+			}
+
+			f.message = RedemptionToMessage(e)
+			f.hasMessage = true
+		}
 	case msgReconnect:
 		f.kind = frameReconnect
 
@@ -137,6 +179,8 @@ type EventSub struct {
 	helixURL   string
 	httpClient *http.Client
 
+	subs []Subscription
+
 	mu      sync.Mutex
 	conn    *websocket.Conn
 	cancel  context.CancelFunc
@@ -157,6 +201,13 @@ func WithHelixURL(u string) EventSubOption {
 	}
 }
 
+// WithSubscriptions replaces the default redemption-only topic list.
+func WithSubscriptions(subs ...Subscription) EventSubOption {
+	return func(e *EventSub) {
+		e.subs = subs
+	}
+}
+
 func WithEventSubHTTPClient(c *http.Client) EventSubOption {
 	return func(e *EventSub) {
 		e.httpClient = c
@@ -171,6 +222,7 @@ func NewEventSub(onMessage MessageHandler, provider AuthProvider, onAuthLost fun
 		wsURL:      eventSubWSURL,
 		helixURL:   helixBaseURL,
 		httpClient: http.DefaultClient,
+		subs:       defaultSubscriptions(),
 	}
 
 	for _, opt := range opts {
@@ -373,9 +425,17 @@ func (e *EventSub) adoptConn(ctx context.Context, conn *websocket.Conn) bool {
 	return true
 }
 
-// subscribe accepts a rare spurious logout when a real 401 races a user disconnect because the token is genuinely dead.
+// subscribe registers every configured topic. One failing topic must not stop
+// the others: a missing scope on channel.follow still leaves redemptions alive.
 func (e *EventSub) subscribe(ctx context.Context, sessionID string) {
-	err := e.trySubscribeWithRetry(ctx, sessionID)
+	for _, sub := range e.subs {
+		e.subscribeOne(ctx, sessionID, sub)
+	}
+}
+
+// subscribeOne accepts a rare spurious logout when a real 401 races a user disconnect because the token is genuinely dead.
+func (e *EventSub) subscribeOne(ctx context.Context, sessionID string, sub Subscription) {
+	err := e.trySubscribeWithRetry(ctx, sessionID, sub)
 
 	switch {
 	case err == nil:
@@ -391,7 +451,7 @@ func (e *EventSub) subscribe(ctx context.Context, sessionID string) {
 			return
 		}
 
-		if err2 := e.trySubscribeWithRetry(ctx, sessionID); err2 != nil {
+		if err2 := e.trySubscribeWithRetry(ctx, sessionID, sub); err2 != nil {
 			if errors.Is(err2, errUnauthorized) || errors.Is(err2, ErrAuthPermanent) {
 				e.onAuthLost()
 			}
@@ -400,11 +460,11 @@ func (e *EventSub) subscribe(ctx context.Context, sessionID string) {
 	}
 }
 
-func (e *EventSub) trySubscribeWithRetry(ctx context.Context, sessionID string) error {
+func (e *EventSub) trySubscribeWithRetry(ctx context.Context, sessionID string, sub Subscription) error {
 	var err error
 
 	for attempt := 0; attempt < subscriptionRetryLimit; attempt++ {
-		err = e.trySubscribe(ctx, sessionID)
+		err = e.trySubscribe(ctx, sessionID, sub)
 
 		if err == nil || !isTransientSubscriptionError(err) {
 			return err
@@ -451,18 +511,16 @@ func (e *subscriptionHTTPStatusError) Error() string {
 }
 
 type subscriptionRequest struct {
-	Type      string `json:"type"`
-	Version   string `json:"version"`
-	Condition struct {
-		BroadcasterUserID string `json:"broadcaster_user_id"`
-	} `json:"condition"`
+	Type      string            `json:"type"`
+	Version   string            `json:"version"`
+	Condition map[string]string `json:"condition"`
 	Transport struct {
 		Method    string `json:"method"`
 		SessionID string `json:"session_id"`
 	} `json:"transport"`
 }
 
-func (e *EventSub) trySubscribe(ctx context.Context, sessionID string) error {
+func (e *EventSub) trySubscribe(ctx context.Context, sessionID string, sub Subscription) error {
 	token, err := e.auth.AccessToken(ctx)
 
 	if err != nil {
@@ -475,12 +533,28 @@ func (e *EventSub) trySubscribe(ctx context.Context, sessionID string) error {
 		return err
 	}
 
-	body := subscriptionRequest{
-		Type:    subscriptionType,
-		Version: "1",
+	condition := map[string]string{"broadcaster_user_id": userID}
+
+	if sub.SelfAsModerator {
+		condition["moderator_user_id"] = userID
 	}
 
-	body.Condition.BroadcasterUserID = userID
+	for key, value := range sub.Condition {
+		condition[key] = value
+	}
+
+	version := sub.Version
+
+	if version == "" {
+		version = "1"
+	}
+
+	body := subscriptionRequest{
+		Type:      sub.Type,
+		Version:   version,
+		Condition: condition,
+	}
+
 	body.Transport.Method = "websocket"
 	body.Transport.SessionID = sessionID
 

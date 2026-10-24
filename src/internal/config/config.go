@@ -104,6 +104,12 @@ type CustomSource struct {
 	URL string `json:"url"`
 }
 
+// FollowersConfig controls the new-follower overlay.
+type FollowersConfig struct {
+	// Duration is how long the latest follower stays highlighted, in seconds.
+	Duration int `json:"duration"`
+}
+
 // OverlayConfig controls the browser-source server (OBS and friends).
 type OverlayConfig struct {
 	Enabled bool `json:"enabled"`
@@ -112,18 +118,19 @@ type OverlayConfig struct {
 }
 
 type Config struct {
-	Version      string        `json:"version"`
-	InstallID    string        `json:"install_id"`
-	WindowState  WindowState   `json:"window_state"`
-	General      General       `json:"general"`
-	Keybinds     Keybinds      `json:"keybinds"`
-	Theme        ThemeConfig   `json:"theme"`
-	Twitch       TwitchConfig  `json:"twitch"`
-	YouTube      YouTubeConfig `json:"youtube"`
-	Kick         KickConfig    `json:"kick"`
-	CustomSource CustomSource  `json:"custom_source"`
-	Overlay      OverlayConfig `json:"overlay"`
-	Appearance   Appearance    `json:"appearance"`
+	Version      string          `json:"version"`
+	InstallID    string          `json:"install_id"`
+	WindowState  WindowState     `json:"window_state"`
+	General      General         `json:"general"`
+	Keybinds     Keybinds        `json:"keybinds"`
+	Theme        ThemeConfig     `json:"theme"`
+	Twitch       TwitchConfig    `json:"twitch"`
+	YouTube      YouTubeConfig   `json:"youtube"`
+	Kick         KickConfig      `json:"kick"`
+	CustomSource CustomSource    `json:"custom_source"`
+	Overlay      OverlayConfig   `json:"overlay"`
+	Appearance   Appearance      `json:"appearance"`
+	Followers    FollowersConfig `json:"followers"`
 }
 
 func DefaultConfig() Config {
@@ -165,6 +172,9 @@ func DefaultConfig() Config {
 		Appearance: Appearance{
 			Accent: "violet",
 			Scale:  100,
+		},
+		Followers: FollowersConfig{
+			Duration: 8,
 		},
 	}
 }

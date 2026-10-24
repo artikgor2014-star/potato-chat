@@ -271,6 +271,51 @@ export function ChannelTab() {
     );
 }
 
+export function FollowersTab() {
+    const { t } = useTranslation();
+    const config = useConfigStore((s) => s.config);
+    const update = useConfigStore((s) => s.update);
+
+    const duration = config?.followers?.duration ?? 8;
+
+    return (
+        <>
+            <div className="group">
+                <span className="group__title">{t('settings.followers.title')}</span>
+
+                <div className="card">
+                    <Field
+                        label={`${t('settings.followers.duration')} · ${duration} ${t('settings.followers.seconds')}`}
+                        hint={t('settings.followers.duration_hint')}
+                    >
+                        <input
+                            type="range"
+                            min={3}
+                            max={30}
+                            step={1}
+                            value={duration}
+                            onChange={(e) => void update({ followers: { duration: Number(e.target.value) } })}
+                        />
+                    </Field>
+                </div>
+            </div>
+
+            <div className="card card--flat">
+                <span className="field__hint">{t('settings.followers.requirements')}</span>
+            </div>
+
+            <div className="group">
+                <span className="group__title">{t('settings.followers.obs_title')}</span>
+
+                <div className="card">
+                    <div className="code">/followers</div>
+                    <span className="field__hint">{t('settings.followers.obs_hint')}</span>
+                </div>
+            </div>
+        </>
+    );
+}
+
 export function ThemeTab() {
     const { t } = useTranslation();
     const config = useConfigStore((s) => s.config);
