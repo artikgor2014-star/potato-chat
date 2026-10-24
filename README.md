@@ -1,77 +1,110 @@
 # Potato Chat
 
-**Twitch chat overlay that lets clicks pass through to the game.**
+**Чат Twitch поверх игры, который не мешает играть.**
 
-Every always-on-top chat window has the same flaw: it eats your mouse. You go to
-flick your aim, and instead you're scrolling chat. Potato Chat is a transparent
-overlay that ignores mouse input until you press `Ctrl+Shift+H` — chat stays on
-screen, your crosshair stays yours.
+У любого окна «поверх всех» одна и та же проблема: оно забирает мышь. Ты идёшь
+фликом на цель — и вместо выстрела прокручиваешь чат. Potato Chat это прозрачный
+оверлей, который игнорирует мышь, пока ты не нажмёшь `Ctrl+Shift+H`: чат остаётся
+на экране, прицел остаётся твоим.
 
-**[Download](https://github.com/artikgor2014-star/potato-chat/releases/latest)** · Windows x64 · 11 MB · portable, no install
+**[Скачать](https://github.com/artikgor2014-star/potato-chat/releases/latest)** · Windows x64 · 11 МБ · без установки
 
-## Why
+---
+
+## Зачем
 
 | | Potato Chat | Chatterino | OBS Browser Source |
 |---|---|---|---|
-| Visible to the streamer on screen | **yes** | yes | no |
-| Clicks pass through to the game | **yes** | no | yes |
-| Visible to viewers on stream | via window capture | no | yes |
-| Russian UI | **yes** | no | no |
-| Size | **11 MB** | ~40 MB | part of OBS |
+| Стример видит чат на экране | **да** | да | нет |
+| Клики проходят в игру | **да** | нет | да |
+| Зрители видят чат на стриме | через захват окна | нет | да |
+| Русский интерфейс | **да** | нет | нет |
+| Размер | **11 МБ** | ~40 МБ | в составе OBS |
 
-Chatterino is an excellent client — for reading and moderating, not for playing
-with chat on screen. OBS Browser Source shows chat to viewers, not to you.
+Chatterino — отличный клиент. Для чтения и модерации. Но не для игры с чатом на
+экране. OBS Browser Source показывает чат зрителям, а не тебе.
 
-## Features
+---
 
-- Transparent always-on-top overlay, clicks pass through
-- `Ctrl+Shift+H` toggles overlay / interactive mode from any app
-- Twitch, YouTube and Kick simultaneously, plus arbitrary overlay URLs
-- Themes: font, size, colour, outline, message plates, fade timeout
-- Channel events: subs, raids, announcements, channel point redemptions
-- No telemetry, no account needed to read chat
+## Что умеет
 
-## Install
+- Прозрачный оверлей поверх всех окон, клики проходят в игру
+- `Ctrl+Shift+H` переключает режим оверлея из любого приложения
+- Twitch, YouTube и Kick одновременно, плюс свои оверлеи по URL
+- Темы: шрифт, размер, цвет, обводка, плашки сообщений, автоскрытие
+- События канала: подписки, рейды, объявления, награды за баллы
+- Без телеметрии, аккаунт для чтения чата не нужен
 
-1. Download `PotatoChat.exe` from [Releases](https://github.com/artikgor2014-star/potato-chat/releases/latest)
-2. Run it. SmartScreen warns because the binary is unsigned — *More info* → *Run anyway*
-3. Enter your Twitch channel → **Connect** → **Open Chat**
-4. Press `Ctrl+Shift+H` for overlay mode
+---
 
-The game must run in **borderless / windowed fullscreen**. No overlay window can
-draw over exclusive fullscreen.
+## Установка
 
-### Verify the download
+1. Скачай `PotatoChat.exe` со страницы [Releases](https://github.com/artikgor2014-star/potato-chat/releases/latest)
+2. Запусти. SmartScreen предупредит, потому что файл без платной подписи — **«Подробнее» → «Выполнить в любом случае»**
+3. Введи ник канала на Twitch → **Подключить** → **Открыть чат**
+4. Нажми `Ctrl+Shift+H` — включится режим оверлея
+
+Игра должна быть в **оконном режиме без рамки** (borderless). В эксклюзивном
+полноэкранном режиме ни одно оверлей-окно не отображается — это ограничение
+Windows, а не программы.
+
+### Проверка файла
 
 ```
 certutil -hashfile PotatoChat.exe SHA256
 ```
 
-`359C2E81207E5CD2717479A6345C976EE1F53A8954005439BBE007B59AB2A6BE`
-
-The release binary is built from this repository by GitHub Actions.
-
-## Using it in OBS
-
-Add a **Window Capture** source, pick `potato-chat`, set the capture method to
-**Windows 10 (1903 and newer)**, and enable **Allow transparency**. Put the source
-above your game capture. BitBlt produces a black rectangle because the window
-renders through the GPU.
-
-## Layout
+Должно совпасть с файлом `SHA256SUMS.txt` из того же релиза. Хеш для v1.0.2:
 
 ```
-index.html, styles.css, assets/   landing page (GitHub Pages)
-src/                              application source (Go + React, Wails v3)
-winget/                           winget manifests
-.github/workflows/                Pages deploy, tagged Windows release build
-PUBLISH.md                        how to ship a new version (one click)
-PROMOTION.md                      where and how to announce this
+4DE0CA0764243EA162716DBBC2BE4B4841F8F5B5AB0D1186A7586824FBEB7949
 ```
 
-Build instructions: [`src/README.md`](src/README.md).
+Файл собран GitHub Actions из кода в этом репозитории — можно проверить.
 
-## License
+---
 
-DON'T BE A DICK PUBLIC LICENSE, inherited from Ghost Chat. Original work
-copyright Marco Schuster; see [`src/LICENSE.md`](src/LICENSE.md).
+## Как вывести чат зрителям в OBS
+
+1. Источники → **+** → **Захват окна**
+2. Окно: `[PotatoChat.exe]: potato-chat`
+3. Метод захвата: **Windows 10 (1903 и новее)** — обязательно
+4. Галочка **«Разрешить прозрачность»**
+5. Перетащи источник **выше** захвата игры
+
+Метод BitBlt даст чёрный прямоугольник: окно рендерится через GPU, и BitBlt его
+не видит.
+
+---
+
+## Структура репозитория
+
+```
+index.html, styles.css, assets/   сайт (GitHub Pages)
+src/                              исходники приложения (Go + React, Wails v3)
+winget/                           манифесты для winget
+.github/workflows/                деплой сайта и сборка exe на тег
+PUBLISH.md                        как выпустить новую версию (4 клика)
+PROMOTION.md                      где и как рассказывать о проекте
+```
+
+Инструкция по сборке из исходников: [`src/README.md`](src/README.md).
+
+---
+
+## Ссылки
+
+- **Сайт:** https://artikgor2014-star.github.io/potato-chat/
+- **Все версии:** https://github.com/artikgor2014-star/potato-chat/releases
+- **Прямая ссылка на последнюю:** https://github.com/artikgor2014-star/potato-chat/releases/latest/download/PotatoChat.exe
+
+---
+
+## Лицензия
+
+DON'T BE A DICK PUBLIC LICENSE, унаследована от Ghost Chat. Оригинальная работа —
+copyright Marco Schuster; см. [`src/LICENSE.md`](src/LICENSE.md).
+
+Проект — форк [Ghost Chat](https://github.com/Enubia/ghost-chat). Изменения:
+переименование, русская локализация, удалены автообновление и отправка отчётов
+на сервер автора, новая иконка.
