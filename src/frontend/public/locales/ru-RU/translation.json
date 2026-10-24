@@ -2,61 +2,85 @@
     "titlebar": {
         "settings": "Настройки",
         "minimize": "Свернуть",
-        "close": "Закрыть",
-        "no_hotkey": "Хоткей скрытия не задан"
+        "close": "Закрыть"
+    },
+    "connect": {
+        "eyebrow": "Подключение",
+        "title": "Чат на экране, мышь в игре",
+        "subtitle": "Выберите платформу и введите канал. Логин не нужен — чат читается анонимно.",
+        "pick": "Платформа",
+        "anonymous": "Аккаунт понадобится только для наград за баллы канала.",
+        "online": "Подключено",
+        "source_label": "Адрес страницы",
+        "launch_hint": "Дальше Ctrl+Shift+H — и окно станет прозрачным."
     },
     "home": {
-        "twitch": "Twitch",
-        "youtube": "YouTube",
-        "kick": "Kick",
         "connect": "Подключить",
-        "connecting": "Подключение...",
+        "connecting": "Подключение…",
         "disconnect": "Отключить",
         "open_chat": "Открыть чат",
         "placeholder": {
             "channel": "Название канала",
-            "channel_id": "ID канала",
-            "channel_or_url": "Канал, @handle или ссылка на видео",
+            "channel_or_url": "@handle, ID канала или ссылка",
             "kick_channel": "Название канала"
         },
         "custom_source": {
             "label": "Свой оверлей",
-            "placeholder": "https://your-overlay.example.com",
-            "open": "Открыть оверлей",
-            "hint": "Некоторые сайты запрещают встраивание и могут отображаться пустыми."
-        }
+            "placeholder": "https://example.com/overlay",
+            "open": "Открыть",
+            "hint": "Страница откроется внутри окна. Некоторые сайты запрещают встраивание."
+        },
+        "twitch": "Twitch",
+        "youtube": "YouTube",
+        "kick": "Kick"
     },
     "chat": {
         "back": "Назад",
         "reload": "Перезагрузить",
-        "waiting": "Ожидание сообщений...",
-        "disconnected": "Отключено",
-        "scroll_to_bottom": "Вниз",
-        "scroll_to_top": "Вверх",
+        "waiting": "Ждём сообщений",
         "vanish": "Режим оверлея",
-        "redemption": "{{user}} активировал {{reward}} ({{cost}} баллов)"
+        "scroll_to_bottom": "Вниз",
+        "scroll_to_top": "Вверх"
+    },
+    "source": {
+        "empty": "Адрес не задан. Укажите его на экране подключения."
     },
     "settings": {
-        "support": "Основано на Ghost Chat Марко Шустера (лицензия DON'T BE A DICK).",
+        "save": "Сохранить",
+        "saved": "Сохранено",
+        "compact_hint": "Плотнее отступы в настройках",
+        "autostart_hint": "Запускать вместе с Windows",
         "tabs": {
-            "general": "Общие",
-            "twitch": "Twitch",
-            "youtube": "YouTube",
-            "kick": "Kick",
-            "themes": "Темы",
-            "overlay": "Оверлей"
+            "general": "Общее",
+            "channel": "Канал",
+            "overlay": "Оверлей",
+            "themes": "Темы"
+        },
+        "appearance": {
+            "title": "Оформление"
+        },
+        "behaviour": {
+            "title": "Поведение"
+        },
+        "channel": {
+            "title": "Канал Twitch",
+            "hint": "Подставляется при запуске. Enter — сохранить."
+        },
+        "filters": {
+            "title": "Фильтры"
+        },
+        "events": {
+            "title": "События канала"
         },
         "general": {
             "language": "Язык",
-            "show_timestamps": "Показывать время",
-            "vanish_hotkey": "Хоткей оверлея",
-            "press_keys": "Нажмите комбинацию клавиш...",
-            "not_set": "Не задан",
-            "show_waiting_message": "Показывать сообщение ожидания",
-            "hotkey_hint": "Нужен Ctrl, Alt или Shift плюс ещё одна клавиша. Например, Ctrl+Shift+V",
-            "appearance": "Оформление",
-            "behaviour": "Поведение",
             "accent": "Акцентный цвет",
+            "ui_scale": "Масштаб интерфейса",
+            "ui_scale_hint": "Влияет только на настройки, чат не меняется.",
+            "compact": "Компактный режим",
+            "show_timestamps": "Показывать время",
+            "show_waiting_message": "Показывать «ждём сообщений»",
+            "autostart": "Запускать с Windows",
             "accents": {
                 "violet": "Фиолетовый",
                 "blue": "Синий",
@@ -64,132 +88,66 @@
                 "green": "Зелёный",
                 "amber": "Янтарный"
             },
-            "ui_scale": "Масштаб интерфейса",
-            "ui_scale_hint": "Увеличивает шрифты и элементы настроек. На чат не влияет.",
-            "compact": "Компактный режим",
-            "autostart": "Запускать с Windows"
+            "vanish_hotkey": "Переключение оверлея"
         },
         "platform": {
             "default_channel": "Канал по умолчанию",
             "fade": "Скрывать старые сообщения",
-            "fade_timeout": "Таймаут скрытия (секунды)",
-            "user_blacklist": "Чёрный список",
-            "user_blacklist_placeholder": "user1, user2, ..."
+            "fade_timeout": "Через сколько секунд"
         },
         "twitch": {
-            "account": "Аккаунт Twitch",
-            "account_hint": "Подключите аккаунт Twitch, чтобы включить награды за баллы канала.",
-            "connect": "Подключить",
-            "pending_instruction": "Введите этот код на Twitch, чтобы авторизовать Potato Chat:",
-            "open_twitch": "Открыть Twitch",
-            "connected_as": "Подключено как {{login}}",
-            "logout": "Выйти",
             "bots": "Показывать ботов",
             "hide_commands": "Скрывать команды",
             "hide_badges": "Скрывать значки",
             "hide_gifs": "Скрывать GIF",
-            "events": "События",
-            "events_hint": "Показывать уведомления о событиях канала (без входа в аккаунт)",
+            "events_hint": "Уведомления о подписках, рейдах и наградах.",
             "events_subs": "Подписки",
             "events_raids": "Рейды",
             "events_announcements": "Объявления",
-            "events_redemptions": "Награды за баллы канала",
-            "events_redemptions_hint": "Подключите аккаунт Twitch, чтобы включить награды за баллы канала.",
-            "events_other": "Другие события"
-        },
-        "youtube": {
-            "channel": "Канал / ссылка на видео",
-            "channel_placeholder": "@handle, ID канала или ссылка на видео",
-            "detect": "Определить",
-            "detecting": "Определение..."
-        },
-        "kick": {
-            "default_channel_placeholder": "название_канала"
-        },
-        "themes": {
-            "active_theme": "Активная тема",
-            "duplicate": "Дублировать",
-            "delete": "Удалить",
-            "name": "Название темы",
-            "readonly_hint": "Встроенные темы только для чтения. Дублируйте, чтобы изменить.",
-            "typography": "Типографика",
-            "font_family": "Шрифт",
-            "font_family_hint": "например, Arial, Helvetica, sans-serif",
-            "font_family_desc": "Меняет шрифт всего текста чата",
-            "font_size": "Размер шрифта",
-            "font_size_desc": "Меняет размер текста чата",
-            "line_height": "Межстрочный интервал",
-            "line_height_desc": "Управляет вертикальным расстоянием между строками",
-            "message": "Сообщение",
-            "message_bg": "Фон",
-            "message_bg_hint": "например, transparent, rgba(0,0,0,0.3), #333",
-            "message_bg_desc": "Задаёт фон под каждым сообщением",
-            "message_padding": "Отступы",
-            "message_padding_hint": "например, 2px 0, 4px 8px",
-            "message_padding_desc": "Внутренние отступы сообщения",
-            "message_radius": "Скругление",
-            "message_radius_desc": "Скругляет углы фона сообщений",
-            "message_gap": "Промежуток",
-            "message_gap_desc": "Вертикальный зазор между сообщениями",
-            "text_color": "Цвет текста",
-            "text_color_hint": "например, inherit, #ffffff, rgb(255,255,255)",
-            "text_color_desc": "Меняет цвет текста сообщений",
-            "text_weight": "Насыщенность текста",
-            "text_weight_desc": "Насколько жирный текст сообщений",
-            "text_shadow": "Тень текста",
-            "text_shadow_hint": "например, none, 0 1px 2px rgba(0,0,0,0.5)",
-            "text_shadow_desc": "Добавляет тень для читаемости",
-            "text_stroke_width": "Обводка текста",
-            "text_stroke_width_desc": "Рисует контур вокруг текста для контраста (0 отключает)",
-            "text_stroke_color": "Цвет обводки",
-            "text_stroke_color_hint": "например, #000000, rgba(0,0,0,0.8)",
-            "text_stroke_color_desc": "Цвет контура текста",
-            "top_to_bottom": "Сверху вниз",
-            "top_to_bottom_desc": "Новые сообщения сверху вместо низа",
-            "username_section": "Никнейм",
-            "username_weight": "Насыщенность ника",
-            "username_weight_desc": "Насколько жирные никнеймы",
-            "show_colon": "Двоеточие",
-            "show_colon_desc": "Показывать двоеточие после никнейма",
-            "elements": "Элементы",
-            "badge_size": "Размер значков",
-            "badge_size_desc": "Размер значков подписчика и модератора",
-            "emote_size": "Размер эмоутов",
-            "emote_size_desc": "Размер эмоутов внутри сообщений",
-            "gif_size": "Размер GIF",
-            "gif_size_desc": "Максимальная высота GIF в сообщениях",
-            "show_avatars": "Аватары",
-            "show_avatars_desc": "Показывать аватары рядом с сообщениями",
-            "avatar_size": "Размер аватара",
-            "avatar_size_desc": "Размер аватаров пользователей",
-            "export": "Экспорт",
-            "import": "Импорт",
-            "llm_hint": "Совет: экспортируйте тему, попросите ИИ-чатбот её поправить и импортируйте обратно."
+            "events_redemptions": "Награды за баллы",
+            "events_other": "Прочее"
         },
         "overlay": {
-            "enabled": "Сервер оверлея",
-            "enabled_hint": "Отдаёт чат как веб-страницу. Нужен для OBS Browser Source и второго монитора.",
-            "url": "Адрес для OBS",
-            "url_hint": "Вставьте в OBS: Источники → + → Браузер → URL. Ширина 400, высота 800.",
+            "title": "Сервер оверлея",
+            "enabled": "Включён",
+            "enabled_hint": "Отдаёт чат как веб-страницу для OBS",
+            "state": "Состояние",
+            "running": "работает",
+            "stopped": "выключен",
+            "url": "Адрес",
+            "url_hint": "Вставьте в OBS как источник «Браузер».",
             "not_running": "Сервер выключен",
             "copy": "Копировать",
             "copied": "Скопировано",
+            "preview": "Открыть",
+            "advanced": "Дополнительно",
             "port": "Порт",
-            "port_hint": "По умолчанию 8123. Меняйте, если порт занят другой программой.",
+            "port_hint": "По умолчанию 8123. Меняйте, если занят.",
             "restart": "Перезапустить",
             "lan": "Доступ по сети",
-            "lan_hint": "Разрешить подключение с других устройств в той же сети — например, если OBS на другом ПК.",
-            "obs": "OBS Browser Source",
-            "obs_steps": "Источники → + → Браузер → вставьте адрес выше → ширина 400, высота 800 → галочка «Закрыть при завершении» не нужна. Фон прозрачный по умолчанию.",
-            "preview": "Открыть в браузере"
+            "lan_hint": "Для OBS на другом компьютере",
+            "obs_size": "400 × 800",
+            "obs_steps": "OBS → Источники → + → Браузер → вставьте адрес. Фон прозрачный, захват окна не нужен."
+        },
+        "themes": {
+            "active_theme": "Тема чата",
+            "sample": "Пример сообщения в чате",
+            "hint": "Тема меняет только вид сообщений, не интерфейс."
+        },
+        "hotkey": {
+            "title": "Хоткей",
+            "hint": "Нужен Ctrl, Alt или Shift плюс клавиша",
+            "listening": "Нажмите комбинацию…",
+            "empty": "Не задан",
+            "clear": "Сбросить"
         }
     },
     "validation": {
-        "twitch_channel_length": "Должно быть от 3 до 25 символов",
-        "twitch_channel_chars": "Только буквы, цифры и подчёркивания",
-        "kick_channel_length": "Должно быть от 3 до 26 символов",
-        "kick_channel_chars": "Только буквы, цифры, подчёркивания и дефисы",
+        "twitch_channel_length": "От 3 до 25 символов",
+        "twitch_channel_chars": "Только буквы, цифры и подчёркивание",
+        "kick_channel_length": "От 3 до 26 символов",
+        "kick_channel_chars": "Только буквы, цифры, подчёркивание и дефис",
         "fade_timeout": "Целое число от 1 до 300",
-        "theme_name_empty": "Название темы не может быть пустым"
+        "theme_name_empty": "Название не может быть пустым"
     }
 }

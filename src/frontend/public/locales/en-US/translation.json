@@ -2,61 +2,85 @@
     "titlebar": {
         "settings": "Settings",
         "minimize": "Minimize",
-        "close": "Close",
-        "no_hotkey": "No vanish hotkey set"
+        "close": "Close"
+    },
+    "connect": {
+        "eyebrow": "Connection",
+        "title": "Chat on screen, mouse in game",
+        "subtitle": "Pick a platform and enter a channel. No login needed — chat is read anonymously.",
+        "pick": "Platform",
+        "anonymous": "An account is only needed for channel point redemptions.",
+        "online": "Connected",
+        "source_label": "Page URL",
+        "launch_hint": "Then press Ctrl+Shift+H to make the window transparent."
     },
     "home": {
-        "twitch": "Twitch",
-        "youtube": "YouTube",
-        "kick": "Kick",
         "connect": "Connect",
-        "connecting": "Connecting...",
+        "connecting": "Connecting…",
         "disconnect": "Disconnect",
-        "open_chat": "Open Chat",
+        "open_chat": "Open chat",
         "placeholder": {
             "channel": "Channel name",
-            "channel_id": "Channel ID",
-            "channel_or_url": "Channel, @handle, or video URL",
+            "channel_or_url": "@handle, channel ID or video URL",
             "kick_channel": "Channel name"
         },
         "custom_source": {
-            "label": "Custom Overlay",
-            "placeholder": "https://your-overlay.example.com",
-            "open": "Open Overlay",
-            "hint": "Some sites block embedding and may render blank."
-        }
+            "label": "Custom overlay",
+            "placeholder": "https://example.com/overlay",
+            "open": "Open",
+            "hint": "The page opens inside the window. Some sites block embedding."
+        },
+        "twitch": "Twitch",
+        "youtube": "YouTube",
+        "kick": "Kick"
     },
     "chat": {
         "back": "Back",
         "reload": "Reload",
-        "waiting": "Waiting for messages...",
-        "disconnected": "Disconnected",
-        "scroll_to_bottom": "Scroll to bottom",
-        "scroll_to_top": "Scroll to top",
-        "vanish": "Toggle vanish mode",
-        "redemption": "{{user}} redeemed {{reward}} ({{cost}} points)"
+        "waiting": "Waiting for messages",
+        "vanish": "Overlay mode",
+        "scroll_to_bottom": "Bottom",
+        "scroll_to_top": "Top"
+    },
+    "source": {
+        "empty": "No URL set. Add one on the connect screen."
     },
     "settings": {
-        "support": "Based on Ghost Chat by Marco Schuster (DON'T BE A DICK license).",
+        "save": "Save",
+        "saved": "Saved",
+        "compact_hint": "Tighter spacing in settings",
+        "autostart_hint": "Launch together with Windows",
         "tabs": {
             "general": "General",
-            "twitch": "Twitch",
-            "youtube": "YouTube",
-            "kick": "Kick",
-            "themes": "Themes",
-            "overlay": "Overlay"
+            "channel": "Channel",
+            "overlay": "Overlay",
+            "themes": "Themes"
+        },
+        "appearance": {
+            "title": "Appearance"
+        },
+        "behaviour": {
+            "title": "Behaviour"
+        },
+        "channel": {
+            "title": "Twitch channel",
+            "hint": "Prefilled on launch. Enter to save."
+        },
+        "filters": {
+            "title": "Filters"
+        },
+        "events": {
+            "title": "Channel events"
         },
         "general": {
             "language": "Language",
-            "show_timestamps": "Show Timestamps",
-            "vanish_hotkey": "Vanish Hotkey",
-            "press_keys": "Press a key combination...",
-            "not_set": "Not set",
-            "show_waiting_message": "Show Waiting Message",
-            "hotkey_hint": "Requires one of Ctrl, Alt, or Shift plus another key. E.g. Ctrl+Shift+V",
-            "appearance": "Appearance",
-            "behaviour": "Behaviour",
             "accent": "Accent colour",
+            "ui_scale": "Interface scale",
+            "ui_scale_hint": "Affects settings only, never the chat.",
+            "compact": "Compact mode",
+            "show_timestamps": "Show timestamps",
+            "show_waiting_message": "Show \"waiting for messages\"",
+            "autostart": "Start with Windows",
             "accents": {
                 "violet": "Violet",
                 "blue": "Blue",
@@ -64,132 +88,66 @@
                 "green": "Green",
                 "amber": "Amber"
             },
-            "ui_scale": "Interface scale",
-            "ui_scale_hint": "Scales fonts and settings controls. Does not affect the chat.",
-            "compact": "Compact mode",
-            "autostart": "Start with Windows"
+            "vanish_hotkey": "Overlay toggle"
         },
         "platform": {
-            "default_channel": "Default Channel",
-            "fade": "Fade Messages",
-            "fade_timeout": "Fade Timeout (seconds)",
-            "user_blacklist": "User Blacklist",
-            "user_blacklist_placeholder": "user1, user2, ..."
+            "default_channel": "Default channel",
+            "fade": "Fade old messages",
+            "fade_timeout": "After how many seconds"
         },
         "twitch": {
-            "account": "Twitch Account",
-            "account_hint": "Connect your Twitch account to enable channel point redemptions.",
-            "connect": "Connect",
-            "pending_instruction": "Enter this code on Twitch to authorize Potato Chat:",
-            "open_twitch": "Open Twitch",
-            "connected_as": "Connected as {{login}}",
-            "logout": "Log out",
-            "bots": "Show Bots",
-            "hide_commands": "Hide Commands",
-            "hide_badges": "Hide Badges",
+            "bots": "Show bots",
+            "hide_commands": "Hide commands",
+            "hide_badges": "Hide badges",
             "hide_gifs": "Hide GIFs",
-            "events": "Events",
-            "events_hint": "Show inline notifications for channel events (no login required)",
+            "events_hint": "Notifications about subs, raids and redemptions.",
             "events_subs": "Subscriptions",
             "events_raids": "Raids",
             "events_announcements": "Announcements",
-            "events_redemptions": "Channel Point Redemptions",
-            "events_redemptions_hint": "Connect your Twitch account to enable channel point redemptions.",
-            "events_other": "Other Events"
-        },
-        "youtube": {
-            "channel": "Channel / Video URL",
-            "channel_placeholder": "@handle, channel ID, or video URL",
-            "detect": "Detect",
-            "detecting": "Detecting..."
-        },
-        "kick": {
-            "default_channel_placeholder": "channelname"
-        },
-        "themes": {
-            "active_theme": "Active Theme",
-            "duplicate": "Duplicate",
-            "delete": "Delete",
-            "name": "Theme Name",
-            "readonly_hint": "Built-in themes are read-only. Duplicate to customize.",
-            "typography": "Typography",
-            "font_family": "Font Family",
-            "font_family_hint": "e.g. Arial, Helvetica, sans-serif",
-            "font_family_desc": "Changes the font used for all chat text",
-            "font_size": "Font Size",
-            "font_size_desc": "Changes how large the chat text appears",
-            "line_height": "Line Height",
-            "line_height_desc": "Controls vertical spacing between lines of text",
-            "message": "Message",
-            "message_bg": "Background",
-            "message_bg_hint": "e.g. transparent, rgba(0,0,0,0.3), #333",
-            "message_bg_desc": "Sets the background color behind each message",
-            "message_padding": "Padding",
-            "message_padding_hint": "e.g. 2px 0, 4px 8px",
-            "message_padding_desc": "Controls the inner spacing within each message",
-            "message_radius": "Border Radius",
-            "message_radius_desc": "Rounds the corners of message backgrounds",
-            "message_gap": "Spacing",
-            "message_gap_desc": "Sets the vertical gap between messages",
-            "text_color": "Text Color",
-            "text_color_hint": "e.g. inherit, #ffffff, rgb(255,255,255)",
-            "text_color_desc": "Changes the color of the message text",
-            "text_weight": "Text Weight",
-            "text_weight_desc": "Controls how bold the message text appears",
-            "text_shadow": "Text Shadow",
-            "text_shadow_hint": "e.g. none, 0 1px 2px rgba(0,0,0,0.5)",
-            "text_shadow_desc": "Adds a shadow behind text for better readability",
-            "text_stroke_width": "Text Stroke",
-            "text_stroke_width_desc": "Draws an outline around text for better contrast (0 disables it)",
-            "text_stroke_color": "Text Stroke Color",
-            "text_stroke_color_hint": "e.g. #000000, rgba(0,0,0,0.8)",
-            "text_stroke_color_desc": "Color of the text outline",
-            "top_to_bottom": "Top to Bottom",
-            "top_to_bottom_desc": "Shows newest messages at the top instead of the bottom",
-            "username_section": "Username",
-            "username_weight": "Font Weight",
-            "username_weight_desc": "Controls how bold usernames appear",
-            "show_colon": "Show Colon",
-            "show_colon_desc": "Displays a colon after the username",
-            "elements": "Elements",
-            "badge_size": "Badge Size",
-            "badge_size_desc": "Changes the size of subscriber and moderator badges",
-            "emote_size": "Emote Size",
-            "emote_size_desc": "Changes how large emotes appear inline",
-            "gif_size": "GIF Size",
-            "gif_size_desc": "Sets the maximum height of inline Twitch GIFs",
-            "show_avatars": "Show Avatars",
-            "show_avatars_desc": "Displays user profile pictures next to messages",
-            "avatar_size": "Avatar Size",
-            "avatar_size_desc": "Changes the size of user profile pictures",
-            "export": "Export",
-            "import": "Import",
-            "llm_hint": "Tip: Export your theme and ask an AI chatbot to adjust it for you, then import it back."
+            "events_redemptions": "Channel point redemptions",
+            "events_other": "Other"
         },
         "overlay": {
-            "enabled": "Overlay server",
-            "enabled_hint": "Serves the chat as a web page. Needed for OBS Browser Source and a second monitor.",
-            "url": "URL for OBS",
-            "url_hint": "Paste into OBS: Sources → + → Browser → URL. Width 400, height 800.",
+            "title": "Overlay server",
+            "enabled": "Enabled",
+            "enabled_hint": "Serves the chat as a web page for OBS",
+            "state": "State",
+            "running": "running",
+            "stopped": "stopped",
+            "url": "URL",
+            "url_hint": "Paste it into OBS as a Browser source.",
             "not_running": "Server is off",
             "copy": "Copy",
             "copied": "Copied",
+            "preview": "Open",
+            "advanced": "Advanced",
             "port": "Port",
-            "port_hint": "8123 by default. Change it if another program already uses the port.",
+            "port_hint": "8123 by default. Change it if the port is taken.",
             "restart": "Restart",
             "lan": "Network access",
-            "lan_hint": "Allow connections from other devices on the same network — e.g. when OBS runs on another PC.",
-            "obs": "OBS Browser Source",
-            "obs_steps": "Sources → + → Browser → paste the URL above → width 400, height 800. The background is transparent by default.",
-            "preview": "Open in browser"
+            "lan_hint": "For OBS running on another computer",
+            "obs_size": "400 × 800",
+            "obs_steps": "OBS → Sources → + → Browser → paste the URL. The background is transparent, no window capture needed."
+        },
+        "themes": {
+            "active_theme": "Chat theme",
+            "sample": "Sample chat message",
+            "hint": "The theme changes message rendering only, not the interface."
+        },
+        "hotkey": {
+            "title": "Hotkey",
+            "hint": "Needs Ctrl, Alt or Shift plus a key",
+            "listening": "Press a combination…",
+            "empty": "Not set",
+            "clear": "Clear"
         }
     },
     "validation": {
-        "twitch_channel_length": "Must be 3-25 characters",
-        "twitch_channel_chars": "Only letters, numbers, and underscores",
-        "kick_channel_length": "Must be 3-26 characters",
-        "kick_channel_chars": "Only letters, numbers, underscores, and hyphens",
-        "fade_timeout": "Must be a whole number between 1 and 300",
-        "theme_name_empty": "Theme name cannot be empty"
+        "twitch_channel_length": "Must be 3–25 characters",
+        "twitch_channel_chars": "Only letters, digits and underscore",
+        "kick_channel_length": "Must be 3–26 characters",
+        "kick_channel_chars": "Only letters, digits, underscore and hyphen",
+        "fade_timeout": "Whole number from 1 to 300",
+        "theme_name_empty": "Name cannot be empty"
     }
 }

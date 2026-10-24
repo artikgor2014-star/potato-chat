@@ -6,7 +6,7 @@ import App from './App';
 // oxlint-disable-next-line import/no-unassigned-import
 import './i18n';
 // oxlint-disable-next-line import/no-unassigned-import
-import './index.css';
+import './styles/app.css';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>

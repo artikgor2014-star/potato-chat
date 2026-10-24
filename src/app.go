@@ -233,6 +233,12 @@ func (a *App) UpdateConfig(cfg *config.Config) error {
 	return nil
 }
 
+// Version reports the build version, so the interface can show it instead of
+// hard-coding a string that drifts from the release tag.
+func (a *App) Version() string {
+	return a.version
+}
+
 // OverlayStatus is what the settings screen shows about the browser-source server.
 type OverlayStatus struct {
 	URL     string `json:"url"`
