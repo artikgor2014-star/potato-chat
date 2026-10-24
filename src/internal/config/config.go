@@ -11,6 +11,15 @@ type General struct {
 	Language           string `json:"language"` // default "en-US"
 	ShowTimestamps     bool   `json:"show_timestamps"`
 	ShowWaitingMessage bool   `json:"show_waiting_message"`
+	Autostart          bool   `json:"autostart"`
+}
+
+// Appearance holds UI-only preferences: accent colour, interface scale and
+// density. They never affect chat rendering, only the settings window.
+type Appearance struct {
+	Accent  string `json:"accent"` // violet | blue | pink | green | amber
+	Scale   int    `json:"scale"`  // percent, 90..130
+	Compact bool   `json:"compact"`
 }
 
 type VanishKeybind struct {
@@ -95,6 +104,13 @@ type CustomSource struct {
 	URL string `json:"url"`
 }
 
+// OverlayConfig controls the browser-source server (OBS and friends).
+type OverlayConfig struct {
+	Enabled bool `json:"enabled"`
+	Port    int  `json:"port"`
+	LAN     bool `json:"lan"`
+}
+
 type Config struct {
 	Version      string        `json:"version"`
 	InstallID    string        `json:"install_id"`
@@ -106,6 +122,8 @@ type Config struct {
 	YouTube      YouTubeConfig `json:"youtube"`
 	Kick         KickConfig    `json:"kick"`
 	CustomSource CustomSource  `json:"custom_source"`
+	Overlay      OverlayConfig `json:"overlay"`
+	Appearance   Appearance    `json:"appearance"`
 }
 
 func DefaultConfig() Config {
@@ -139,6 +157,14 @@ func DefaultConfig() Config {
 		},
 		Kick: KickConfig{
 			FadeTimeout: 30,
+		},
+		Overlay: OverlayConfig{
+			Enabled: true,
+			Port:    8123,
+		},
+		Appearance: Appearance{
+			Accent: "violet",
+			Scale:  100,
 		},
 	}
 }

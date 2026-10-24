@@ -10,6 +10,7 @@ import (
 	"potato-chat/internal/chat/youtube"
 	"potato-chat/internal/config"
 	ghHotkey "potato-chat/internal/hotkey"
+	"potato-chat/internal/overlay"
 	"log/slog"
 	"os"
 	"os/exec"
@@ -30,6 +31,7 @@ type App struct {
 	auth             *auth.Manager
 	clients          map[chat.Platform]chat.Client
 	redemptions      *twitch.EventSub
+	overlay          *overlay.Server
 	redemptionsMu    sync.Mutex
 	twitchChannel    string
 	authMu           sync.Mutex
@@ -54,13 +56,9 @@ func NewApp(cfg *config.Config, configPath string, version string) *App {
 		lastH:      cfg.WindowState.Height,
 	}
 
-	onMessage := func(msg chat.ChatMessage) {
-		if a.emit != nil {
-			a.emit("chat:message", msg)
-		}
-	}
+	a.overlay = overlay.New(a.GetConfig)
 
-	a.redemptions = twitch.NewEventSub(onMessage, twitchAuthAdapter{m: a.auth}, a.handleRedemptionAuthLost)
+	a.redemptions = twitch.NewEventSub(a.publish, twitchAuthAdapter{m: a.auth}, a.handleRedemptionAuthLost)
 
 	return a
 }
@@ -76,19 +74,22 @@ func (a *App) SetApp(app *application.App, win *application.WebviewWindow) {
 	a.wireClients()
 }
 
-func makeHandlers(emit func(string, any)) (func(chat.ChatMessage), func(string, any)) {
-	onMessage := func(msg chat.ChatMessage) {
-		emit("chat:message", msg)
-	}
-	onEvent := func(event string, data any) {
-		emit(event, data)
+// publish fans a message out to the app window and to overlay clients.
+func (a *App) publish(msg chat.ChatMessage) {
+	if a.emit != nil {
+		a.emit("chat:message", msg)
 	}
 
-	return onMessage, onEvent
+	if a.overlay != nil {
+		a.overlay.Broadcast(msg)
+	}
 }
 
 func (a *App) wireClients() {
-	onMessage, onEvent := makeHandlers(a.emit)
+	onMessage := a.publish
+	onEvent := func(event string, data any) {
+		a.emit(event, data)
+	}
 
 	a.clients = map[chat.Platform]chat.Client{
 		chat.PlatformTwitch:  twitch.NewClient(onMessage, onEvent),
@@ -135,6 +136,9 @@ func (a *App) ServiceStartup(ctx context.Context, options application.ServiceOpt
 
 	go a.restoreTwitchAuth()
 
+	a.overlay.Start(a.GetConfig().Overlay)
+	a.syncAutostart()
+
 	return nil
 }
 
@@ -170,6 +174,10 @@ func (a *App) ServiceShutdown() error {
 			a.redemptions.Stop()
 		}
 
+		if a.overlay != nil {
+			a.overlay.Stop()
+		}
+
 		ghHotkey.Unregister()
 	}()
 
@@ -188,6 +196,8 @@ func (a *App) UpdateConfig(cfg *config.Config) error {
 
 	oldConfig := a.config
 	oldKeybind := a.config.Keybinds.Vanish.Keybind
+	oldOverlay := a.config.Overlay
+	oldAutostart := a.config.General.Autostart
 	account := a.config.Twitch.Account
 
 	installID := a.config.InstallID
@@ -212,7 +222,51 @@ func (a *App) UpdateConfig(cfg *config.Config) error {
 		}
 	}
 
+	if cfg.Overlay != oldOverlay {
+		a.overlay.Start(cfg.Overlay)
+	}
+
+	if cfg.General.Autostart != oldAutostart {
+		a.syncAutostart()
+	}
+
 	return nil
+}
+
+// OverlayStatus is what the settings screen shows about the browser-source server.
+type OverlayStatus struct {
+	URL     string `json:"url"`
+	Running bool   `json:"running"`
+	Port    int    `json:"port"`
+	LAN     bool   `json:"lan"`
+}
+
+func (a *App) GetOverlayStatus() OverlayStatus {
+	cfg := a.GetConfig()
+
+	return OverlayStatus{
+		URL:     a.overlay.URL(),
+		Running: a.overlay.Running(),
+		Port:    cfg.Overlay.Port,
+		LAN:     cfg.Overlay.LAN,
+	}
+}
+
+// RestartOverlay re-binds the server, e.g. after the port was busy.
+func (a *App) RestartOverlay() OverlayStatus {
+	a.overlay.Start(a.GetConfig().Overlay)
+
+	return a.GetOverlayStatus()
+}
+
+// OpenOverlay opens the overlay page in the default browser for a preview.
+func (a *App) OpenOverlay() error {
+	url := a.overlay.URL()
+	if url == "" {
+		return fmt.Errorf("overlay server is not running")
+	}
+
+	return a.app.Browser.OpenURL(url)
 }
 
 func (a *App) Connect(platform chat.Platform, input string) error {

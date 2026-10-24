@@ -43,7 +43,8 @@
             "twitch": "Twitch",
             "youtube": "YouTube",
             "kick": "Kick",
-            "themes": "Themes"
+            "themes": "Themes",
+            "overlay": "Overlay"
         },
         "general": {
             "language": "Language",
@@ -52,7 +53,21 @@
             "press_keys": "Press a key combination...",
             "not_set": "Not set",
             "show_waiting_message": "Show Waiting Message",
-            "hotkey_hint": "Requires one of Ctrl, Alt, or Shift plus another key. E.g. Ctrl+Shift+V"
+            "hotkey_hint": "Requires one of Ctrl, Alt, or Shift plus another key. E.g. Ctrl+Shift+V",
+            "appearance": "Appearance",
+            "behaviour": "Behaviour",
+            "accent": "Accent colour",
+            "accents": {
+                "violet": "Violet",
+                "blue": "Blue",
+                "pink": "Pink",
+                "green": "Green",
+                "amber": "Amber"
+            },
+            "ui_scale": "Interface scale",
+            "ui_scale_hint": "Scales fonts and settings controls. Does not affect the chat.",
+            "compact": "Compact mode",
+            "autostart": "Start with Windows"
         },
         "platform": {
             "default_channel": "Default Channel",
@@ -150,6 +165,23 @@
             "export": "Export",
             "import": "Import",
             "llm_hint": "Tip: Export your theme and ask an AI chatbot to adjust it for you, then import it back."
+        },
+        "overlay": {
+            "enabled": "Overlay server",
+            "enabled_hint": "Serves the chat as a web page. Needed for OBS Browser Source and a second monitor.",
+            "url": "URL for OBS",
+            "url_hint": "Paste into OBS: Sources → + → Browser → URL. Width 400, height 800.",
+            "not_running": "Server is off",
+            "copy": "Copy",
+            "copied": "Copied",
+            "port": "Port",
+            "port_hint": "8123 by default. Change it if another program already uses the port.",
+            "restart": "Restart",
+            "lan": "Network access",
+            "lan_hint": "Allow connections from other devices on the same network — e.g. when OBS runs on another PC.",
+            "obs": "OBS Browser Source",
+            "obs_steps": "Sources → + → Browser → paste the URL above → width 400, height 800. The background is transparent by default.",
+            "preview": "Open in browser"
         }
     },
     "validation": {

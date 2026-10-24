@@ -1,29 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :root {
-    --color-bg: #2a2a35;
-    --color-bg-raised: #32323f;
-    --color-bg-sunken: #24242e;
-    --color-bg-hover: #3a3a48;
-    --color-surface: #383845;
-    --color-border: #4e4e6044;
-    --color-border-strong: #6a6a80;
-    --color-text: #ececf0;
-    --color-text-muted: #a0a0b8;
-    --color-text-dim: #787890;
-    --color-accent: #8b80e8;
-    --color-accent-hover: #9d94f0;
-    --color-accent-muted: #8b80e833;
-    --color-danger: #e06f6f;
-    --color-success: #6fcc8a;
-    --color-warning: #d4a053;
+    /* Black-purple base: near-black with a violet cast, so surfaces read as
+       layers of the same material rather than flat grey boxes. */
+    --color-bg: #0b0812;
+    --color-bg-raised: #151024;
+    --color-bg-sunken: #07050e;
+    --color-bg-hover: #1e1633;
+    --color-surface: #171128;
+    --color-border: #2e2447;
+    --color-border-strong: #4a3c70;
+    --color-text: #ece9f7;
+    --color-text-muted: #a89fc9;
+    --color-text-dim: #6f6591;
+    --color-accent: #a855f7;
+    --color-accent-hover: #c084fc;
+    --color-accent-muted: #a855f733;
+    --color-accent-glow: #a855f74d;
+    --color-danger: #f06f8a;
+    --color-success: #5fd39a;
+    --color-warning: #e0a955;
 
-    --radius-sm: 4px;
-    --radius-md: 6px;
-    --radius-lg: 10px;
+    /* Accent presets, swapped at runtime by the appearance settings. */
+    --accent-soft: #a855f7;
 
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.15);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --radius-sm: 6px;
+    --radius-md: 9px;
+    --radius-lg: 14px;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 0 1px rgba(168, 85, 247, 0.25), 0 6px 24px rgba(168, 85, 247, 0.12);
 
     --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
     --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
@@ -32,6 +39,7 @@
     --transition-normal: 200ms ease;
 
     --titlebar-height: 38px;
+    --ui-scale: 1;
 }
 
 *,
@@ -280,5 +288,130 @@ html[data-vanished] ::-webkit-scrollbar {
 
     &:hover {
         background: var(--color-border-strong);
+    }
+}
+
+/* ---------------------------------------------------------------------------
+   Appearance: accent presets, density, scale.
+
+   data-accent on <html> swaps the accent trio; data-compact tightens spacing;
+   --ui-scale on <html> scales the whole interface.
+   --------------------------------------------------------------------------- */
+
+html {
+    font-size: calc(16px * var(--ui-scale));
+}
+
+html[data-accent='violet'] {
+    --color-accent: #a855f7;
+    --color-accent-hover: #c084fc;
+    --color-accent-muted: #a855f733;
+    --color-accent-glow: #a855f74d;
+}
+
+html[data-accent='blue'] {
+    --color-accent: #4f8cff;
+    --color-accent-hover: #7aa8ff;
+    --color-accent-muted: #4f8cff33;
+    --color-accent-glow: #4f8cff4d;
+}
+
+html[data-accent='pink'] {
+    --color-accent: #f472b6;
+    --color-accent-hover: #f9a8d4;
+    --color-accent-muted: #f472b633;
+    --color-accent-glow: #f472b64d;
+}
+
+html[data-accent='green'] {
+    --color-accent: #34d399;
+    --color-accent-hover: #6ee7b7;
+    --color-accent-muted: #34d39933;
+    --color-accent-glow: #34d3994d;
+}
+
+html[data-accent='amber'] {
+    --color-accent: #f0b25a;
+    --color-accent-hover: #f7c97f;
+    --color-accent-muted: #f0b25a33;
+    --color-accent-glow: #f0b25a4d;
+}
+
+body {
+    background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(168, 85, 247, 0.1), transparent 70%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(88, 28, 135, 0.12), transparent 70%);
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, var(--color-accent-hover), var(--color-accent));
+    box-shadow: 0 2px 12px var(--color-accent-glow);
+
+    &:hover:not(:disabled) {
+        box-shadow: 0 3px 18px var(--color-accent-glow);
+    }
+}
+
+/* Compact density */
+html[data-compact] .content {
+    padding: 10px;
+    gap: 10px;
+}
+
+html[data-compact] .field-label {
+    font-size: 11px;
+}
+
+html[data-compact] .tab {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+html[data-compact] .message {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: 4px;
+
+    &:hover {
+        background: var(--color-accent);
+    }
+}
+
+/* Accent swatches used by the appearance settings */
+.accent-swatches {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.accent-swatch {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition:
+        transform var(--transition-fast),
+        border-color var(--transition-fast);
+
+    &:hover {
+        transform: scale(1.1);
+    }
+
+    &.active {
+        border-color: var(--color-text);
+        box-shadow: 0 0 0 2px var(--color-bg);
     }
 }

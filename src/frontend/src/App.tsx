@@ -14,6 +14,7 @@ import { ThemePreview } from '@/components/Settings/ThemePreview';
 import { TitleBar } from '@/components/TitleBar/TitleBar';
 import { useAuthStore } from '@/stores/auth';
 import { useConfigStore } from '@/stores/config';
+import { applyAppearance } from '@/utils/appearance';
 import { useConnectionStore } from '@/stores/connection';
 
 import styles from './App.module.css';
@@ -26,6 +27,7 @@ function App() {
     const load = useConfigStore((s) => s.load);
     const loaded = useConfigStore((s) => s.loaded);
     const language = useConfigStore((s) => s.config?.general?.language);
+    const appearance = useConfigStore((s) => s.config?.appearance);
     const setConnected = useConnectionStore((s) => s.setConnected);
     const seedAuth = useAuthStore((s) => s.seed);
     const setAuthPending = useAuthStore((s) => s.setPending);
@@ -115,6 +117,10 @@ function App() {
             void i18n.changeLanguage(language);
         }
     }, [language, i18n]);
+
+    useEffect(() => {
+        applyAppearance(appearance);
+    }, [appearance]);
 
     if (!loaded) {
         return null;

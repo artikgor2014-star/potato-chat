@@ -1,0 +1,96 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: transparent;
+    overflow: hidden;
+}
+
+.messages {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--theme-message-gap, 0px);
+    padding: 8px 10px;
+    overflow: hidden;
+    font-family: var(--theme-font-family, inherit);
+    font-size: var(--theme-font-size, 16px);
+    line-height: var(--theme-line-height, 1.6);
+}
+
+.messages.top-to-bottom {
+    justify-content: flex-start;
+}
+
+.message {
+    background: var(--theme-message-bg, transparent);
+    padding: var(--theme-message-padding, 2px 0);
+    border-radius: var(--theme-message-radius, 0px);
+    font-weight: var(--theme-text-weight, 400);
+    text-shadow: var(--theme-text-shadow, none);
+    color: var(--theme-text-color, #ffffff);
+    -webkit-text-stroke: var(--theme-text-stroke, 0);
+    paint-order: stroke fill;
+    overflow-wrap: anywhere;
+    transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+}
+
+.message.out {
+    opacity: 0;
+    transform: translateY(-4px);
+}
+
+.message.action {
+    font-style: italic;
+}
+
+.username {
+    font-weight: var(--theme-username-weight, 600);
+    color: var(--user-color, #ffffff);
+}
+
+.separator {
+    color: var(--theme-text-color, #ffffff);
+    opacity: 0.7;
+    margin-right: 0.25em;
+}
+
+.badges {
+    margin-right: 4px;
+}
+
+.badge {
+    width: var(--theme-badge-size, 1.286em);
+    height: var(--theme-badge-size, 1.286em);
+    margin-right: 2px;
+    vertical-align: middle;
+}
+
+.emote {
+    height: var(--theme-emote-size, 2em);
+    vertical-align: middle;
+    margin: -0.2em 1px;
+}
+
+.gif {
+    max-height: var(--theme-gif-size, 8em);
+    vertical-align: middle;
+}
+
+.timestamp {
+    font-size: 0.72em;
+    opacity: 0.65;
+    margin-right: 6px;
+}
+
+.event {
+    background: rgba(145, 70, 255, 0.16);
+    border-left: 3px solid rgba(145, 70, 255, 0.8);
+    padding: 3px 8px;
+    border-radius: 4px;
+}

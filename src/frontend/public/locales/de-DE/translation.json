@@ -43,7 +43,8 @@
             "twitch": "Twitch",
             "youtube": "YouTube",
             "kick": "Kick",
-            "themes": "Designs"
+            "themes": "Designs",
+            "overlay": "Overlay"
         },
         "general": {
             "language": "Sprache",
@@ -52,7 +53,21 @@
             "press_keys": "Tastenkombination drücken...",
             "not_set": "Nicht gesetzt",
             "show_waiting_message": "Wartenachricht anzeigen",
-            "hotkey_hint": "Erfordert Strg, Alt oder Shift plus eine weitere Taste. Z.B. Strg+Shift+V"
+            "hotkey_hint": "Erfordert Strg, Alt oder Shift plus eine weitere Taste. Z.B. Strg+Shift+V",
+            "appearance": "Darstellung",
+            "behaviour": "Verhalten",
+            "accent": "Akzentfarbe",
+            "accents": {
+                "violet": "Violett",
+                "blue": "Blau",
+                "pink": "Rosa",
+                "green": "Grün",
+                "amber": "Bernstein"
+            },
+            "ui_scale": "Skalierung",
+            "ui_scale_hint": "Skaliert Schriften und Bedienelemente. Der Chat bleibt unverändert.",
+            "compact": "Kompaktmodus",
+            "autostart": "Mit Windows starten"
         },
         "platform": {
             "default_channel": "Standardkanal",
@@ -150,6 +165,23 @@
             "export": "Exportieren",
             "import": "Importieren",
             "llm_hint": "Tipp: Exportiere dein Design und lass es von einem KI-Chatbot anpassen, dann importiere es zurueck."
+        },
+        "overlay": {
+            "enabled": "Overlay-Server",
+            "enabled_hint": "Stellt den Chat als Webseite bereit. Nötig für OBS Browser-Quelle und einen zweiten Monitor.",
+            "url": "URL für OBS",
+            "url_hint": "In OBS einfügen: Quellen → + → Browser → URL. Breite 400, Höhe 800.",
+            "not_running": "Server ist aus",
+            "copy": "Kopieren",
+            "copied": "Kopiert",
+            "port": "Port",
+            "port_hint": "Standard 8123. Ändern, wenn eine andere Anwendung den Port belegt.",
+            "restart": "Neu starten",
+            "lan": "Netzwerkzugriff",
+            "lan_hint": "Verbindungen aus dem lokalen Netz erlauben — z. B. wenn OBS auf einem anderen PC läuft.",
+            "obs": "OBS Browser-Quelle",
+            "obs_steps": "Quellen → + → Browser → URL einfügen → Breite 400, Höhe 800. Der Hintergrund ist standardmäßig transparent.",
+            "preview": "Im Browser öffnen"
         }
     },
     "validation": {
