@@ -19,6 +19,7 @@ type fakeIRC struct {
 	server   *httptest.Server
 	conn     *websocket.Conn
 	received []string
+	conns    int
 	mu       sync.Mutex
 }
 
@@ -34,6 +35,7 @@ func newFakeIRC(t *testing.T) *fakeIRC {
 		}
 		f.mu.Lock()
 		f.conn = conn
+		f.conns++
 		f.mu.Unlock()
 
 		for {
@@ -67,6 +69,13 @@ func (f *fakeIRC) send(t *testing.T, msg string) {
 	}
 }
 
+// connectionCount reports how many times a client dialled this server.
+func (f *fakeIRC) connectionCount() int {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.conns
+}
+
 func (f *fakeIRC) getReceived() []string {
 	f.mu.Lock()
 	defer f.mu.Unlock()
@@ -92,7 +101,7 @@ func TestHandleMessage_PRIVMSG(t *testing.T) {
 	)
 
 	line := "@display-name=TestUser;id=msg-1;color=#00FF00;badges=;emotes=;tmi-sent-ts=1700000000000 :testuser!testuser@testuser.tmi.twitch.tv PRIVMSG #channel :hello world"
-	client.handleMessage(line)
+	client.handleMessage(nil, line)
 
 	if got.Username != "TestUser" {
 		t.Errorf("Username = %q, want TestUser", got.Username)
@@ -115,7 +124,7 @@ func TestHandleMessage_PRIVMSGGifWinsTieWithThirdPartyEmote(t *testing.T) {
 	client.emotes.store(map[string]string{"[yay": "https://cdn.example.com/yay.png"})
 
 	line := "@display-name=TestUser;id=msg-1;emotes=;gifs=0-12|g1|https://example.com/x.gif;tmi-sent-ts=1700000000000 :testuser!testuser@testuser.tmi.twitch.tv PRIVMSG #channel :[yay yes gif] hi"
-	client.handleMessage(line)
+	client.handleMessage(nil, line)
 
 	if len(got.Fragments) != 2 {
 		t.Fatalf("len(Fragments) = %d, want 2: %+v", len(got.Fragments), got.Fragments)
@@ -134,7 +143,7 @@ func TestHandleMessage_PRIVMSGNativeEmoteGetsCDNURL(t *testing.T) {
 	)
 
 	line := "@display-name=TestUser;id=msg-1;emotes=25:0-4;tmi-sent-ts=1700000000000 :testuser!testuser@testuser.tmi.twitch.tv PRIVMSG #channel :Kappa hi"
-	client.handleMessage(line)
+	client.handleMessage(nil, line)
 
 	if len(got.Fragments) != 2 {
 		t.Fatalf("len(Fragments) = %d, want 2: %+v", len(got.Fragments), got.Fragments)
@@ -155,7 +164,7 @@ func TestHandleMessage_USERNOTICEIgnoresGifs(t *testing.T) {
 	)
 
 	line := "@display-name=TestUser;id=evt-1;msg-id=resub;emotes=;gifs=0-12|g1|https://example.com/x.gif;tmi-sent-ts=1700000000000 :testuser!testuser@testuser.tmi.twitch.tv USERNOTICE #channel :[yay yes gif] hi"
-	client.handleMessage(line)
+	client.handleMessage(nil, line)
 
 	want := chat.MessageFragment{Type: chat.FragmentText, Text: "[yay yes gif] hi"}
 
@@ -165,7 +174,7 @@ func TestHandleMessage_USERNOTICEIgnoresGifs(t *testing.T) {
 }
 
 func TestHandleMessage_PING(t *testing.T) {
-	// handleMessage needs a conn to send PONG.
+	// handleMessage replies on the socket the PING arrived on.
 	// We use fakeIRC so we can verify the PONG was received.
 	fake := newFakeIRC(t)
 	defer fake.close()
@@ -185,7 +194,7 @@ func TestHandleMessage_PING(t *testing.T) {
 	// Give the server a moment to register the connection
 	time.Sleep(50 * time.Millisecond)
 
-	client.handleMessage("PING :tmi.twitch.tv")
+	client.handleMessage(conn, "PING :tmi.twitch.tv")
 
 	// Give PONG time to arrive
 	time.Sleep(50 * time.Millisecond)
@@ -210,7 +219,7 @@ func TestHandleMessage_CLEARCHAT(t *testing.T) {
 		func(event string, data any) { gotEvent = event; gotData = data },
 	)
 
-	client.handleMessage("@room-id=12345 :tmi.twitch.tv CLEARCHAT #channel :banneduser")
+	client.handleMessage(nil, "@room-id=12345 :tmi.twitch.tv CLEARCHAT #channel :banneduser")
 
 	if gotEvent != "chat:clear" {
 		t.Errorf("event = %q, want chat:clear", gotEvent)
@@ -228,7 +237,7 @@ func TestHandleMessage_CLEARMSG(t *testing.T) {
 		func(event string, data any) { gotEvent = event; gotData = data },
 	)
 
-	client.handleMessage("@target-msg-id=abc-123 :tmi.twitch.tv CLEARMSG #channel :deleted message text")
+	client.handleMessage(nil, "@target-msg-id=abc-123 :tmi.twitch.tv CLEARMSG #channel :deleted message text")
 
 	if gotEvent != "chat:delete-message" {
 		t.Errorf("event = %q, want chat:delete-message", gotEvent)
@@ -245,8 +254,8 @@ func TestHandleMessage_IgnoresOtherCommands(t *testing.T) {
 		func(event string, data any) { called = true },
 	)
 
-	client.handleMessage(":tmi.twitch.tv 001 justinfan12345 :Welcome, GLHF!")
-	client.handleMessage("@emote-only=0 :tmi.twitch.tv ROOMSTATE #channel")
+	client.handleMessage(nil, ":tmi.twitch.tv 001 justinfan12345 :Welcome, GLHF!")
+	client.handleMessage(nil, "@emote-only=0 :tmi.twitch.tv ROOMSTATE #channel")
 
 	if called {
 		t.Error("handlers should not be called for unhandled commands")
@@ -339,4 +348,74 @@ func TestConnectDisconnect(t *testing.T) {
 	if !hasDisconnected {
 		t.Errorf("expected chat:disconnected event, got %v", events)
 	}
+}
+
+// A half-open socket never returns a read error: Twitch's PINGs stop arriving
+// and chat goes silent. The read deadline must turn that silence into a
+// reconnect, otherwise the app looks connected while nothing arrives.
+func TestReadDeadlineTriggersReconnect(t *testing.T) {
+	fake := newFakeIRC(t)
+	defer fake.close()
+
+	client := NewClient(
+		func(msg chat.ChatMessage) {},
+		func(event string, data any) {},
+	)
+	client.url = fake.url()
+	client.readTimeout = 150 * time.Millisecond
+
+	if err := client.Connect("channel"); err != nil {
+		t.Fatalf("connect failed: %v", err)
+	}
+	defer client.Disconnect()
+
+	deadline := time.Now().Add(3 * time.Second)
+
+	for time.Now().Before(deadline) {
+		if fake.connectionCount() >= 2 {
+			return
+		}
+		time.Sleep(20 * time.Millisecond)
+	}
+
+	t.Fatalf("client did not reconnect after silence, connections = %d", fake.connectionCount())
+}
+
+// PONG must go back on the socket that carried the PING, not on whatever
+// c.conn points at after a reconnect.
+func TestPingRepliesOnOriginatingSocket(t *testing.T) {
+	fake := newFakeIRC(t)
+	defer fake.close()
+
+	client := NewClient(
+		func(msg chat.ChatMessage) {},
+		func(event string, data any) {},
+	)
+	client.url = fake.url()
+
+	if err := client.Connect("channel"); err != nil {
+		t.Fatalf("connect failed: %v", err)
+	}
+	defer client.Disconnect()
+
+	// Point c.conn elsewhere: the reply must still use the live socket.
+	client.mu.Lock()
+	live := client.conn
+	client.conn = nil
+	client.mu.Unlock()
+
+	client.handleMessage(live, "PING :tmi.twitch.tv")
+
+	deadline := time.Now().Add(time.Second)
+
+	for time.Now().Before(deadline) {
+		for _, msg := range fake.getReceived() {
+			if msg == "PONG :tmi.twitch.tv" {
+				return
+			}
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+
+	t.Fatalf("no PONG received, got %v", fake.getReceived())
 }

@@ -16,6 +16,10 @@ import (
 const (
 	kickUA            = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 	heartbeatInterval = 30 * time.Second
+
+	// Pusher answers every ping, so a silent socket for this long means the
+	// connection is dead even though reads have not errored yet.
+	readTimeout = 3 * time.Minute
 	maxBackoff        = 60 * time.Second
 )
 
@@ -120,6 +124,8 @@ func (c *Client) readLoop(ctx context.Context, conn *websocket.Conn) {
 			return
 		default:
 		}
+
+		_ = conn.SetReadDeadline(time.Now().Add(readTimeout))
 
 		_, raw, err := conn.ReadMessage()
 		if err != nil {

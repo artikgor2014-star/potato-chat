@@ -17,6 +17,12 @@ const (
 	twitchIRCURL   = "wss://irc-ws.chat.twitch.tv:443"
 	twitchEmoteCDN = "https://static-cdn.jtvnw.net/emoticons/v2"
 	maxBackoff     = 30 * time.Second
+
+	// Twitch sends a PING roughly every five minutes. If nothing arrives for
+	// longer than that, the TCP connection is half-open: reads block forever,
+	// no error surfaces, and chat silently stops. The read deadline turns that
+	// silence into an error so the reconnect loop can take over.
+	readTimeout = 6 * time.Minute
 )
 
 type MessageHandler func(chat.ChatMessage)
@@ -30,7 +36,13 @@ type Client struct {
 	emotes  *EmoteStore
 
 	mu     sync.Mutex
+	writeMu sync.Mutex
 	cancel context.CancelFunc
+
+	// readTimeout and url are fields so tests can shorten the timeout and point
+	// the client at a local server; production uses the package defaults.
+	readTimeout time.Duration
+	url         string
 
 	OnMessage MessageHandler
 	OnEvent   EventHandler
@@ -38,10 +50,12 @@ type Client struct {
 
 func NewClient(onMessage MessageHandler, onEvent EventHandler) *Client {
 	return &Client{
-		OnMessage: onMessage,
-		OnEvent:   onEvent,
-		badges:    NewBadgeStore(),
-		emotes:    NewEmoteStore(),
+		OnMessage:   onMessage,
+		OnEvent:     onEvent,
+		badges:      NewBadgeStore(),
+		emotes:      NewEmoteStore(),
+		readTimeout: readTimeout,
+		url:         twitchIRCURL,
 	}
 }
 
@@ -58,7 +72,7 @@ func (c *Client) Connect(channel string) error {
 		c.conn = nil
 	}
 
-	conn, _, err := websocket.DefaultDialer.Dial(twitchIRCURL, nil)
+	conn, _, err := websocket.DefaultDialer.Dial(c.url, nil)
 
 	if err != nil {
 		c.mu.Unlock()
@@ -117,20 +131,32 @@ func (c *Client) Disconnect() {
 	c.OnEvent("chat:disconnected", map[string]string{"platform": string(chat.PlatformTwitch)})
 }
 
+// write serialises frames: PONG replies, handshakes and reconnects may race.
+func (c *Client) write(conn *websocket.Conn, payload string) error {
+	if conn == nil {
+		return fmt.Errorf("connection is closed")
+	}
+
+	c.writeMu.Lock()
+	defer c.writeMu.Unlock()
+
+	return conn.WriteMessage(websocket.TextMessage, []byte(payload))
+}
+
 func (c *Client) sendHandshake(conn *websocket.Conn, channel string) error {
 	if len(channel) == 0 {
 		return fmt.Errorf("channel is empty")
 	}
 
-	if err := conn.WriteMessage(websocket.TextMessage, []byte("CAP REQ :twitch.tv/tags twitch.tv/commands")); err != nil {
+	if err := c.write(conn, "CAP REQ :twitch.tv/tags twitch.tv/commands"); err != nil {
 		return err
 	}
 
-	if err := conn.WriteMessage(websocket.TextMessage, []byte("PASS SCHMOOPIIE")); err != nil {
+	if err := c.write(conn, "PASS SCHMOOPIIE"); err != nil {
 		return err
 	}
 
-	if err := conn.WriteMessage(websocket.TextMessage, []byte("NICK justinfan12345")); err != nil {
+	if err := c.write(conn, "NICK justinfan12345"); err != nil {
 		return err
 	}
 
@@ -142,7 +168,7 @@ func (c *Client) sendHandshake(conn *websocket.Conn, channel string) error {
 
 	joinLine += channel
 
-	if err := conn.WriteMessage(websocket.TextMessage, []byte(joinLine)); err != nil {
+	if err := c.write(conn, joinLine); err != nil {
 		return err
 	}
 
@@ -156,6 +182,9 @@ func (c *Client) readLoop(ctx context.Context, conn *websocket.Conn) {
 			return
 		default:
 		}
+
+		// Any frame, including Twitch's PING, proves the link is alive.
+		_ = conn.SetReadDeadline(time.Now().Add(c.readTimeout))
 
 		_, message, err := conn.ReadMessage()
 
@@ -173,18 +202,20 @@ func (c *Client) readLoop(ctx context.Context, conn *websocket.Conn) {
 
 		for _, line := range strings.Split(string(message), "\r\n") {
 			if line != "" {
-				c.handleMessage(line)
+				c.handleMessage(conn, line)
 			}
 		}
 	}
 }
 
-func (c *Client) handleMessage(raw string) {
+func (c *Client) handleMessage(conn *websocket.Conn, raw string) {
 	message := ParseIRC(raw)
 
 	switch message.Command {
 	case "PING":
-		c.conn.WriteMessage(websocket.TextMessage, []byte("PONG :tmi.twitch.tv"))
+		// Reply on the socket the PING arrived on: c.conn may already point at
+		// a replacement connection after a reconnect.
+		_ = c.write(conn, "PONG :tmi.twitch.tv")
 	case "ROOMSTATE":
 		channel := strings.TrimPrefix(message.Channel, "#")
 		roomID := message.Tags["room-id"]
@@ -288,7 +319,7 @@ func (c *Client) reconnect(ctx context.Context) {
 		case <-time.After(backoff):
 		}
 
-		conn, _, err := websocket.DefaultDialer.Dial(twitchIRCURL, nil)
+		conn, _, err := websocket.DefaultDialer.Dial(c.url, nil)
 
 		if err != nil {
 			backoff = min(backoff*2, maxBackoff)

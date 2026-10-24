@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
 PackageIdentifier: PotatoChat.PotatoChat
-PackageVersion: 1.2.1
+PackageVersion: 1.2.2
 Platform:
   - Windows.Desktop
 MinimumOSVersion: 10.0.17763.0
@@ -9,7 +9,7 @@ Commands:
   - potato-chat
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/artikgor2014-star/potato-chat/releases/download/v1.2.1/PotatoChat.exe
+    InstallerUrl: https://github.com/artikgor2014-star/potato-chat/releases/download/v1.2.2/PotatoChat.exe
     InstallerSha256: E08A3E849C2FD2878A2610C41EAE022189684C274EF34443895D577E019600EC
 ManifestType: installer
 ManifestVersion: 1.6.0

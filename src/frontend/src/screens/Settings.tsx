@@ -26,7 +26,10 @@ export function SettingsSheet({ onClose }: { onClose: () => void }) {
         <div className="sheet">
             <div className="sheet__bar">
                 <span className="sheet__title">{t('titlebar.settings')}</span>
-                <div className="chat__grow" />
+                <div
+                    className="sheet__drag"
+                    style={{ '--wails-draggable': 'drag' } as React.CSSProperties}
+                />
                 <button
                     className="iconbtn"
                     onClick={onClose}
